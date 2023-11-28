@@ -2,6 +2,7 @@
     import { PlaySolid, Icon } from "svelte-awesome-icons";
     import { appWindow } from "@tauri-apps/api/window";
     import ToolbarItem from "./ToolbarItem.svelte";
+    import { workspace } from "../workspace.ts";
 </script>
 
 <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
@@ -14,7 +15,11 @@
     <h1
         class="pointer-events-none absolute inset-0 flex items-center justify-center opacity-80"
     >
-        PROS Simulator
+        {#if $workspace}
+            {$workspace.name}
+        {:else}
+            PROS Simulator
+        {/if}
     </h1>
 
     <ul class="px-2">

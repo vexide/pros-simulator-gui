@@ -15,7 +15,7 @@ fs_extra = "1.3.0"
 tauri-build = { version = "1.5", features = [] }
 
 [dependencies]
-tauri = { git = "https://github.com/tauri-apps/tauri.git", version = "1", branch = "fix/macos/data-tauri-drag-behavior", features = [
+tauri = { version = "1.5", features = [
     "window-unmaximize",
     "window-start-dragging",
     "window-maximize",
@@ -29,12 +29,13 @@ cocoa = "0.25.0"
 objc = "0.2.7"
 libloading = "0.8.1"
 rfd = "0.10"
-# tauri-plugin-persisted-scope = "0.1.3"
+tauri-plugin-persisted-scope = "0.1.3"
+dirs = "5.0.1"
 
-# [dependencies.tauri-plugin-sql]
-# git = "https://github.com/tauri-apps/plugins-workspace"
-# branch = "v1"
-# features = ["sqlite"]                                   # or "postgres", or "mysql"
+[dependencies.tauri-plugin-sql]
+git = "https://github.com/tauri-apps/plugins-workspace"
+branch = "v1"
+features = ["sqlite"]                                   # or "postgres", or "mysql"
 
 [features]
 # this feature is used for production builds or when `devPath` points to the filesystem

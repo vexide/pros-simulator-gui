@@ -3,7 +3,7 @@
     import type { Writable } from "svelte/store";
     import Card from "./Card.svelte";
     import Button from "./Button.svelte";
-    import { Workspace } from "../state.js";
+    import { Workspace } from "../workspace.ts";
 </script>
 
 <Card title="Settings">
