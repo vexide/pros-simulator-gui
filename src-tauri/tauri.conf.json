@@ -1,0 +1,91 @@
+{
+    "build": {
+        "beforeDevCommand": "pnpm dev",
+        "beforeBuildCommand": "pnpm build",
+        "devPath": "http://localhost:1420",
+        "distDir": "../dist"
+    },
+    "package": {
+        "productName": "pros-simulator-gui",
+        "version": "0.0.0"
+    },
+    "tauri": {
+        "allowlist": {
+            "all": false,
+            "window": {
+                "all": false,
+                "center": false,
+                "close": false,
+                "create": false,
+                "hide": false,
+                "maximize": true,
+                "minimize": false,
+                "print": false,
+                "requestUserAttention": false,
+                "setAlwaysOnTop": false,
+                "setClosable": false,
+                "setContentProtected": false,
+                "setCursorGrab": false,
+                "setCursorIcon": false,
+                "setCursorPosition": false,
+                "setCursorVisible": false,
+                "setDecorations": false,
+                "setFocus": false,
+                "setFullscreen": false,
+                "setIcon": false,
+                "setIgnoreCursorEvents": false,
+                "setMaxSize": false,
+                "setMaximizable": false,
+                "setMinSize": false,
+                "setMinimizable": false,
+                "setPosition": false,
+                "setResizable": false,
+                "setSize": false,
+                "setSkipTaskbar": false,
+                "setTitle": false,
+                "show": false,
+                "startDragging": true,
+                "unmaximize": true,
+                "unminimize": false
+            },
+            "dialog": {
+                "all": false,
+                "ask": false,
+                "confirm": false,
+                "message": false,
+                "open": true,
+                "save": false
+            }
+        },
+        "bundle": {
+            "active": true,
+            "targets": "all",
+            "identifier": "com.tauri.dev",
+            "icon": [
+                "icons/32x32.png",
+                "icons/128x128.png",
+                "icons/128x128@2x.png",
+                "icons/icon.icns",
+                "icons/icon.ico"
+            ]
+        },
+        "security": {
+            "csp": null
+        },
+        "macOSPrivateApi": true,
+        "windows": [
+            {
+                "fullscreen": false,
+                "resizable": true,
+                "title": "pros-simulator-gui",
+                "width": 800,
+                "height": 600,
+                "transparent": true,
+                "titleBarStyle": "Overlay",
+                "hiddenTitle": true,
+                "minWidth": 500,
+                "minHeight": 300
+            }
+        ]
+    }
+}

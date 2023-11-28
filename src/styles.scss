@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    font-size: 13px;
+    @apply cursor-default select-none font-medium antialiased;
+
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-text-size-adjust: 100%;
+    color-scheme: light dark;
+}
+
+html,
+body {
+    @apply m-0 h-full bg-transparent;
+}
+
+button {
+    @apply cursor-default;
+}
+
+button.toolbar-item {
+    @extend .secondary;
+    @apply flex h-9 flex-col-reverse items-center justify-center text-sm leading-none;
+}
+
+.secondary {
+    @apply font-normal text-black text-opacity-60 dark:text-white dark:text-opacity-60;
+}
+
+a {
+    @apply text-blue-500;
+}
