@@ -1,12 +1,10 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-use cocoa::appkit::NSWindow;
-use objc::{class, msg_send, sel, sel_impl};
 use rfd::AsyncFileDialog;
 use tauri::Manager;
 use tauri_plugin_sql::{Migration, MigrationKind};
-use window_vibrancy::{apply_vibrancy, NSVisualEffectMaterial};
+use window_vibrancy::{apply_acrylic, apply_blur, apply_vibrancy, NSVisualEffectMaterial};
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 #[tauri::command]
@@ -47,7 +45,14 @@ fn main() {
             )
             .unwrap();
 
+            #[cfg(target_os = "windows")]
+            apply_blur(&window, Some((18, 18, 18, 200)))
+                .expect("Unsupported platform! 'apply_blur' is only supported on Windows");
+
+            #[cfg(target_os = "macos")]
             if let Ok(ns_window) = window.ns_window() {
+                use cocoa::appkit::NSWindow;
+                use objc::{class, msg_send, sel, sel_impl};
                 let id = ns_window as cocoa::base::id;
                 unsafe { id.setToolbar_(msg_send![class!(NSToolbar), new]) }
             }
