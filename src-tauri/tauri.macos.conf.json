@@ -1,0 +1,18 @@
+{
+    "tauri": {
+        "windows": [
+            {
+                "fullscreen": false,
+                "resizable": true,
+                "title": "PROS Simulator",
+                "width": 800,
+                "height": 600,
+                "transparent": true,
+                "titleBarStyle": "Overlay",
+                "hiddenTitle": true,
+                "minWidth": 500,
+                "minHeight": 300
+            }
+        ]
+    }
+}

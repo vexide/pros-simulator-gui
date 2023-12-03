@@ -6,11 +6,20 @@
     import { Workspace } from "../workspace.ts";
 </script>
 
-<Card title="Settings">
-    <Button
-        onClick={() => {
-            Workspace.close();
-        }}>Close workspace</Button
-    >
-</Card>
-<Card>LCD Display</Card>
+<div class="grid flex-1 grid-cols-2 gap-4 p-8">
+    <Card title="Simulator">
+        <div class="grid grid-cols-2 gap-4 self-stretch">
+            <Button
+                large
+                onClick={() => {
+                    Workspace.close();
+                }}
+            >
+                Close workspace
+            </Button>
+            <Button large onClick={() => {}}>Start simulator</Button>
+        </div>
+    </Card>
+    <Card title="LCD Display">...</Card>
+    <Card title="Console" class="col-span-2">...</Card>
+</div>

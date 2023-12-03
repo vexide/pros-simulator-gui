@@ -2,8 +2,8 @@
     import { database, type RecentWorkspace } from "../database.ts";
     import { Workspace, workspace } from "../workspace.ts";
 
-    const recents = database.then<RecentWorkspace[]>(async (db) => {
-        return await db.select(`
+    const recents = database.then(async (db) => {
+        return await db.select<RecentWorkspace[]>(`
             SELECT * FROM recent_workspaces ORDER BY last_opened DESC LIMIT 5;
         `);
     });

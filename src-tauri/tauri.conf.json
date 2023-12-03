@@ -77,7 +77,7 @@
             {
                 "fullscreen": false,
                 "resizable": true,
-                "title": "pros-simulator-gui",
+                "title": "PROS Simulator",
                 "width": 800,
                 "height": 600,
                 "transparent": true,

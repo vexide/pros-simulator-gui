@@ -30,19 +30,19 @@
 <div class="flex h-full flex-col text-black dark:text-white">
     <Titlebar />
 
-    <div class="flex flex-1 items-center justify-center p-4">
-        {#if $workspace}
-            <WorkspaceView />
-        {:else}
+    {#if $workspace}
+        <WorkspaceView />
+    {:else}
+        <div class="flex flex-1 items-center justify-center gap-4 p-4">
             <Card title="Get Started">
-                <div
-                    class="flex flex-grow items-baseline justify-evenly self-stretch"
-                >
-                    <Button onClick={pickWorkspace}>Open workspace</Button>
-                    <p class="secondary">Or pick recent:</p>
+                <div class="grid grid-cols-2 gap-4 self-stretch">
+                    <Button onClick={pickWorkspace} class="flex-1"
+                        >Open workspace</Button
+                    >
+                    <p class="secondary flex-1 text-center">Or pick recent:</p>
                 </div>
                 <RecentWorkspaces />
             </Card>
-        {/if}
-    </div>
+        </div>
+    {/if}
 </div>
