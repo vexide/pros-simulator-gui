@@ -51,7 +51,7 @@ fn main() {
             .unwrap();
 
             #[cfg(target_os = "windows")]
-            apply_blur(&window, Some((18, 18, 18, 200)))
+            apply_blur(&window, Some((200, 200, 200, 230)))
                 .expect("Unsupported platform! 'apply_blur' is only supported on Windows");
 
             #[cfg(target_os = "macos")]
