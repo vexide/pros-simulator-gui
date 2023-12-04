@@ -6,7 +6,7 @@
     import Divider from "./Divider.svelte";
     import { exit } from "@tauri-apps/api/process";
 
-    export let status: Map<string, boolean>;
+    export let components: Map<string, boolean>;
     const dismiss = getContext<ctx.DismissContext>(ctx.dismiss);
 </script>
 
@@ -18,7 +18,7 @@
         </p>
     </div>
     <Form>
-        {#each status as [name, installed] (name)}
+        {#each components as [name, installed] (name)}
             <div class="flex items-center justify-center gap-2">
                 <p
                     aria-hidden="true"

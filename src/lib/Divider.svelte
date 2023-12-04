@@ -1,1 +1,1 @@
-<hr class="h-0.5 w-full opacity-50" />
+<hr class="border-red h-0.5 w-full dark:border-white/20" />

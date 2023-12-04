@@ -49,7 +49,7 @@
         {:else}
             <div class="flex flex-1 items-center justify-center gap-4 p-4">
                 <Modal open={installModalOpen}>
-                    <FirstTimeSetup status={components} />
+                    <FirstTimeSetup {components} />
                 </Modal>
                 <Card title="Get Started">
                     <div class="grid grid-cols-2 gap-4 self-stretch">
