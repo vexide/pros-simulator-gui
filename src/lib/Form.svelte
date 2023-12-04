@@ -6,8 +6,8 @@
 
 <form
     class={twMerge(
-        "relative flex flex-col gap-4 rounded-md border bg-stone-50 p-3",
-        "[&>*:not(:last-child)]:after:absolute [&>*:not(:last-child)]:after:-bottom-[calc(0.5rem)] [&>*:not(:last-child)]:after:w-full [&>*:not(:last-child)]:after:border-b [&>*:not(:last-child)]:after:content-[''] [&>*]:relative",
+        "relative flex flex-col gap-5 rounded-md border bg-stone-50 p-2.5",
+        "[&>*:not(:last-child)]:after:absolute [&>*:not(:last-child)]:after:-bottom-[calc(1.25rem/2)] [&>*:not(:last-child)]:after:w-full [&>*:not(:last-child)]:after:border-b [&>*:not(:last-child)]:after:content-[''] [&>*]:relative",
         className,
     )}
 >
