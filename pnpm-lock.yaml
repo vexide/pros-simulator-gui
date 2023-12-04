@@ -5,12 +5,18 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@discordjs/collection':
+    specifier: ^2.0.0
+    version: 2.0.0
   '@tauri-apps/api':
     specifier: ^1.5.1
     version: 1.5.1
   autoprefixer:
     specifier: ^10.4.16
     version: 10.4.16(postcss@8.4.31)
+  pako:
+    specifier: ^2.1.0
+    version: 2.1.0
   postcss:
     specifier: ^8.4.31
     version: 8.4.31
@@ -26,6 +32,9 @@ dependencies:
   tailwindcss:
     specifier: ^3.3.5
     version: 3.3.5
+  tarballjs:
+    specifier: github:ankitrohatgi/tarballjs
+    version: github.com/ankitrohatgi/tarballjs/64ea5eb78f7fc018a223207e67f4f863fcc5d3c5
   tauri-plugin-sql-api:
     specifier: github:tauri-apps/tauri-plugin-sql#v1
     version: github.com/tauri-apps/tauri-plugin-sql/3c58961a8bc9e13c240f186bc78bf103ed1d8133
@@ -40,6 +49,9 @@ devDependencies:
   '@tsconfig/svelte':
     specifier: ^5.0.0
     version: 5.0.2
+  '@types/pako':
+    specifier: ^2.0.3
+    version: 2.0.3
   sass:
     specifier: ^1.69.5
     version: 1.69.5
@@ -88,6 +100,11 @@ packages:
     dependencies:
       regenerator-runtime: 0.14.0
     dev: true
+
+  /@discordjs/collection@2.0.0:
+    resolution: {integrity: sha512-YTWIXLrf5FsrLMycpMM9Q6vnZoR/lN2AWX23/Cuo8uOOtS8eHB2dyQaaGnaF8aZPYnttf2bkLMcXn/j6JUOi3w==}
+    engines: {node: '>=18'}
+    dev: false
 
   /@esbuild/android-arm64@0.18.20:
     resolution: {integrity: sha512-Nz4rJcchGDtENV0eMKUNa6L12zz2zBDXuhj/Vjh18zGqB44Bi7MBMSXjgunJgjRhCmKOjnPuZp4Mb6OKqtMHLQ==}
@@ -484,6 +501,10 @@ packages:
 
   /@types/estree@1.0.5:
     resolution: {integrity: sha512-/kYRxGDLWzHOB7q+wtSUQlFrtcdUccpfy+X+9iMBpHK8QLLhx2wIPYuS5DYtR9Wa/YlZAbIovy7qVdB1Aq6Lyw==}
+
+  /@types/pako@2.0.3:
+    resolution: {integrity: sha512-bq0hMV9opAcrmE0Byyo0fY3Ew4tgOevJmQ9grUhpXQhYfyLJ1Kqg3P33JT5fdbT2AjeAjR51zqqVjAL/HMkx7Q==}
+    dev: true
 
   /@types/pug@2.0.10:
     resolution: {integrity: sha512-Sk/uYFOBAB7mb74XcpizmH0KOR2Pv3D2Hmrh1Dmy5BmK3MpdSa5kqZcg6EKBdklU0bFXX9gCfzvpnyUehrPIuA==}
@@ -970,6 +991,10 @@ packages:
     resolution: {integrity: sha512-lNaJgI+2Q5URQBkccEKHTQOPaXdUxnZZElQTZY0MFUAuaEqe1E+Nyvgdz/aIyNi6Z9MzO5dv1H8n58/GELp3+w==}
     dependencies:
       wrappy: 1.0.2
+
+  /pako@2.1.0:
+    resolution: {integrity: sha512-w+eufiZ1WuJYgPXbV/PO3NCMEc3xqylkKHzp8bxp1uW4qaSNQUkwmLLEc3kKsfz8lpV1F8Ht3U1Cm+9Srog2ug==}
+    dev: false
 
   /parent-module@1.0.1:
     resolution: {integrity: sha512-GQ2EWRpQV8/o+Aw8YqtfZZPfNRWZYkbidE9k5rpl/hC3vtHHBfGm2Ifi6qWV+coDGkrUKZAxE3Lot5kcsRlh+g==}
@@ -1531,6 +1556,12 @@ packages:
   /yaml@2.3.4:
     resolution: {integrity: sha512-8aAvwVUSHpfEqTQ4w/KMlf3HcRdt50E5ODIQJBw1fQ5RL34xabzxtUlzTXVqc4rkZsPbvrXKWnABCD7kWSmocA==}
     engines: {node: '>= 14'}
+    dev: false
+
+  github.com/ankitrohatgi/tarballjs/64ea5eb78f7fc018a223207e67f4f863fcc5d3c5:
+    resolution: {tarball: https://codeload.github.com/ankitrohatgi/tarballjs/tar.gz/64ea5eb78f7fc018a223207e67f4f863fcc5d3c5}
+    name: tarballjs
+    version: 1.0.0
     dev: false
 
   github.com/tauri-apps/tauri-plugin-sql/3c58961a8bc9e13c240f186bc78bf103ed1d8133:

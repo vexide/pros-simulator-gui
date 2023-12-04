@@ -6,6 +6,19 @@
     import { open } from "@tauri-apps/api/dialog";
     import RecentWorkspaces from "./lib/RecentWorkspaces.svelte";
     import { workspace, Workspace } from "./workspace";
+    import { appInstallStatus } from "./sidecar.ts";
+    import FirstTimeSetup from "./lib/FirstTimeSetup.svelte";
+    import Modal from "./lib/Modal.svelte";
+    import { writable } from "svelte/store";
+
+    let installInfo = appInstallStatus();
+    let installModalOpen = writable(false);
+
+    installInfo.then((info) => {
+        if (info.some((installed) => !installed)) {
+            $installModalOpen = true;
+        }
+    });
 
     $: {
         if ($workspace) {
@@ -30,19 +43,26 @@
 <div class="flex h-full flex-col text-black dark:text-white">
     <Titlebar />
 
-    {#if $workspace}
-        <WorkspaceView />
-    {:else}
-        <div class="flex flex-1 items-center justify-center gap-4 p-4">
-            <Card title="Get Started">
-                <div class="grid grid-cols-2 gap-4 self-stretch">
-                    <Button onClick={pickWorkspace} class="flex-1"
-                        >Open workspace</Button
-                    >
-                    <p class="secondary flex-1 text-center">Or pick recent:</p>
-                </div>
-                <RecentWorkspaces />
-            </Card>
-        </div>
-    {/if}
+    {#await installInfo then components}
+        {#if $workspace}
+            <WorkspaceView />
+        {:else}
+            <div class="flex flex-1 items-center justify-center gap-4 p-4">
+                <Modal open={installModalOpen}>
+                    <FirstTimeSetup status={components} />
+                </Modal>
+                <Card title="Get Started">
+                    <div class="grid grid-cols-2 gap-4 self-stretch">
+                        <Button onClick={pickWorkspace} class="flex-1"
+                            >Open workspace</Button
+                        >
+                        <p class="secondary flex-1 text-center">
+                            Or pick recent:
+                        </p>
+                    </div>
+                    <RecentWorkspaces />
+                </Card>
+            </div>
+        {/if}
+    {/await}
 </div>

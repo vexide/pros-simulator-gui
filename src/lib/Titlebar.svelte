@@ -7,7 +7,7 @@
 
 <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 <header
-    class="relative left-0 right-0 top-0 flex h-[38px] shrink-0 select-none items-center justify-end bg-[#F2F3F1] px-2 text-lg font-bold leading-none shadow [--button-bg-opacity:0.0] hover:[--button-bg-opacity:1.0] dark:bg-neutral-700"
+    class="relative left-0 right-0 top-0 z-40 flex h-[38px] shrink-0 select-none items-center justify-end bg-[#F2F3F1] px-2 text-lg font-bold leading-none shadow [--button-bg-opacity:0.0] hover:[--button-bg-opacity:1.0] dark:bg-neutral-700"
     role="heading"
     aria-level="1"
     data-tauri-drag-region

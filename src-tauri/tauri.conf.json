@@ -55,6 +55,26 @@
                 "message": false,
                 "open": true,
                 "save": false
+            },
+            "http": {
+                "request": true,
+                "scope": [
+                    "https://github.com/pros-rs/pros-simulator/releases/latest/download/*"
+                ]
+            },
+            "fs": {
+                "scope": ["$APPLOCALDATA/*"],
+                "writeFile": true,
+                "exists": true
+            },
+            "path": {
+                "all": true
+            },
+            "process": {
+                "all": false,
+                "exit": true,
+                "relaunch": false,
+                "relaunchDangerousAllowSymlinkMacos": false
             }
         },
         "bundle": {

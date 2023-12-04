@@ -20,6 +20,11 @@ fn get_home_dir() -> Option<String> {
         .map(|s| s.to_string())
 }
 
+#[tauri::command]
+fn get_target() -> &'static str {
+    env!("RUSTC_TARGET")
+}
+
 fn main() {
     let db = tauri_plugin_sql::Builder::default()
         .add_migrations(
@@ -59,7 +64,7 @@ fn main() {
 
             Ok(())
         })
-        .invoke_handler(tauri::generate_handler![get_home_dir])
+        .invoke_handler(tauri::generate_handler![get_home_dir, get_target])
         .plugin(tauri_plugin_persisted_scope::init())
         .plugin(db)
         .run(tauri::generate_context!())
