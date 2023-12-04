@@ -3,7 +3,7 @@
     import { downloadServer } from "../sidecar.ts";
     import Button from "./Button.svelte";
 
-    let downloadStatus = writable("");
+    let downloadStatus = writable<number | undefined>();
     let download: Promise<void> | undefined;
 </script>
 

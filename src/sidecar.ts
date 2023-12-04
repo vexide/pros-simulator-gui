@@ -1,10 +1,10 @@
 import { appLocalDataDir, join } from "@tauri-apps/api/path";
-import { writeBinaryFile, BaseDirectory, exists } from "@tauri-apps/api/fs";
+import { writeBinaryFile, BaseDirectory, exists, readBinaryFile } from "@tauri-apps/api/fs";
 import { Child, Command } from "@tauri-apps/api/shell";
 import { invoke } from "@tauri-apps/api";
 import ExtractWorker from "./sidecar/extract-worker.ts?worker";
 import type { WorkerEvent as ExtractWorkerEvent } from "./sidecar/extract-worker.ts";
-import { ResponseType, fetch } from "@tauri-apps/api/http";
+import { download } from "tauri-plugin-upload-api";
 import { Collection } from "@discordjs/collection";
 
 const targetTriple = await invoke<string>("get_target");
@@ -47,22 +47,22 @@ export async function spawnServer(
     return child;
 }
 
-export async function downloadServer(progress?: (status: string) => void) {
+export async function downloadServer(reportProgress?: (percent: number | undefined) => void) {
     const worker = new ExtractWorker();
+    const appDataPath = await appLocalDataDir();
+    const downloadPath = await join(await appLocalDataDir(), "server.tar.gz");
 
     const url = `https://github.com/pros-rs/pros-simulator/releases/latest/download/pros-simulator-server-${targetTriple}.tar.gz`;
-    progress?.("Downloading");
-    const response = await fetch<number[]>(url, {
-        method: "GET",
-        responseType: ResponseType.Binary,
-    });
-    if (!response.ok) {
-        console.log("Failed to download url:", url);
-        throw new Error(`Error code ${response.status}`);
-    }
-    progress?.("Extracting");
+    reportProgress?.(0);
+    await download(
+        url,
+        downloadPath,
+        (progress, total) => reportProgress?.(progress / total),
+        new Map([[ "User-Agent", "pros-simulator-gui/1.0"], [ "Accept", "application/gzip" ]]),
+      );
+    reportProgress?.(undefined);
 
-    const tgzData = new Uint8Array(response.data);
+    const tgzData = await readBinaryFile(downloadPath, { dir: BaseDirectory.AppLocalData });
     const file = await new Promise<Uint8Array>((resolve, reject) => {
         worker.addEventListener(
             "message",
@@ -82,9 +82,6 @@ export async function downloadServer(progress?: (status: string) => void) {
         });
         worker.postMessage(tgzData, { transfer: [tgzData.buffer] });
     });
-
-    console.log("Recieved");
-    progress?.("Finishing up");
 
     await writeBinaryFile(binaryName, file, {
         dir: BaseDirectory.AppLocalData,

@@ -67,6 +67,7 @@ fn main() {
         .invoke_handler(tauri::generate_handler![get_home_dir, get_target])
         .plugin(tauri_plugin_persisted_scope::init())
         .plugin(db)
+        .plugin(tauri_plugin_upload::init())
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

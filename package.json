@@ -21,7 +21,8 @@
         "prettier-plugin-tailwindcss": "^0.5.7",
         "tailwindcss": "^3.3.5",
         "tarballjs": "github:ankitrohatgi/tarballjs",
-        "tauri-plugin-sql-api": "github:tauri-apps/tauri-plugin-sql#v1"
+        "tauri-plugin-sql-api": "github:tauri-apps/tauri-plugin-sql#v1",
+        "tauri-plugin-upload-api": "github:tauri-apps/tauri-plugin-upload#v1"
     },
     "devDependencies": {
         "@sveltejs/vite-plugin-svelte": "^2.4.2",
