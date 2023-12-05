@@ -28,7 +28,7 @@
     )}
     style="height: {height}"
 >
-    <div bind:this={inner}>
+    <div bind:this={inner} class="w-full">
         <slot />
     </div>
 </div>

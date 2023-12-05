@@ -33,3 +33,33 @@ button.toolbar-item {
 a {
     @apply text-blue-500;
 }
+
+progress {
+    @apply block h-4 w-full appearance-none overflow-hidden rounded-full border p-0 dark:border-white/20;
+}
+
+progress::-webkit-progress-bar {
+    @apply bg-neutral-100 dark:bg-stone-900;
+}
+
+progress::-webkit-progress-value {
+    @apply rounded-full bg-blue-600 transition-[inline-size] duration-200 ease-in-out;
+}
+
+progress:indeterminate::-webkit-progress-value {
+    @apply relative w-1/5 animate-[p-pulse_2s_linear_infinite] transition-none;
+}
+
+@keyframes p-pulse {
+    0% {
+        opacity: 1;
+        left: -20%;
+    }
+    50% {
+        opacity: 0.5;
+    }
+    100% {
+        opacity: 1;
+        left: 100%;
+    }
+}

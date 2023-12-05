@@ -65,6 +65,7 @@
             "fs": {
                 "scope": ["$APPLOCALDATA/*"],
                 "writeFile": true,
+                "readFile": true,
                 "exists": true
             },
             "path": {
@@ -80,7 +81,7 @@
         "bundle": {
             "active": true,
             "targets": "all",
-            "identifier": "com.tauri.dev",
+            "identifier": "rs.pros.simulator",
             "icon": [
                 "icons/32x32.png",
                 "icons/128x128.png",
