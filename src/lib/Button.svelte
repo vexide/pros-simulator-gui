@@ -14,6 +14,7 @@
     export let onClick: () => void;
     export let large = context?.large ?? false;
     export let primary = false;
+    export let disabled = false;
     let className = "";
     export { className as class };
 
@@ -37,13 +38,18 @@
 <button
     bind:this={button}
     class={twMerge(
-        "rounded-lg border bg-white px-4 shadow-sm active:bg-neutral-300 dark:border-none dark:bg-neutral-600 dark:active:bg-neutral-500",
+        "rounded-lg border bg-white px-4 shadow-sm shadow-neutral-500/20 active:bg-neutral-300 dark:border-none dark:bg-neutral-600 dark:active:bg-neutral-500",
         large && "py-1.5",
         primary &&
-            "bg-gradient-to-b from-blue-500/90 to-blue-600/90 font-semibold text-white shadow-sm active:bg-blue-600 active:text-blue-100",
+            !disabled &&
+            "bg-gradient-to-b from-blue-500/90 to-blue-600/90 text-white shadow-sm active:bg-blue-600 active:text-blue-100",
+        primary && "font-semibold",
+        disabled &&
+            "pointer-events-none bg-neutral-100 text-black/50 shadow-neutral-500/10 transition-colors dark:bg-neutral-800 dark:text-white/50",
         className,
     )}
     type="button"
+    {disabled}
     on:click={onClick}
 >
     <slot />

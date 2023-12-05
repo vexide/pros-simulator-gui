@@ -21,7 +21,7 @@
     >
         <Card
             class={twMerge(
-                "pointer-events-auto gap-0 border border-neutral-500 border-opacity-50 p-0 shadow-xl shadow-black/20 dark:bg-opacity-100 dark:shadow-black/70",
+                "pointer-events-auto gap-0 overflow-hidden border border-neutral-500 border-opacity-50 p-0 shadow-xl shadow-black/20 dark:bg-opacity-100 dark:shadow-black/70",
                 className,
             )}
         >
