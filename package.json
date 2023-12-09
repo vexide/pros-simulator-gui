@@ -43,6 +43,6 @@
         "tailwind-merge": "^2.0.0",
         "tslib": "^2.6.0",
         "typescript": "^5.0.2",
-        "vite": "^4.4.4"
+        "vite": "^4.5.1"
     }
 }
