@@ -1,5 +1,4 @@
 <script lang="ts">
-    import Titlebar from "./lib/Titlebar.svelte";
     import Card from "./lib/Card.svelte";
     import Button from "./lib/Button.svelte";
     import WorkspaceView from "./lib/WorkspaceView.svelte";
