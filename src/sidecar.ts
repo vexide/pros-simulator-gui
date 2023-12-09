@@ -1,5 +1,10 @@
 import { appLocalDataDir, join } from "@tauri-apps/api/path";
-import { writeBinaryFile, BaseDirectory, exists, readBinaryFile } from "@tauri-apps/api/fs";
+import {
+    writeBinaryFile,
+    BaseDirectory,
+    exists,
+    readBinaryFile,
+} from "@tauri-apps/api/fs";
 import { Child, Command } from "@tauri-apps/api/shell";
 import { invoke } from "@tauri-apps/api";
 import ExtractWorker from "./sidecar/extract-worker.ts?worker";
@@ -25,8 +30,7 @@ export async function spawnServer(
     wasmPath: string,
     opts?: SpawnServerOptions,
 ): Promise<Child> {
-    const path = await join(await appLocalDataDir(), binaryName);
-    const command = new Command(path, ["--stdio", wasmPath]);
+    const command = new Command(binaryName, ["--stdio", wasmPath]);
     command.stdout.on("data", (line) => {
         const json = JSON.parse(line);
         opts?.onData?.(json);
@@ -34,8 +38,8 @@ export async function spawnServer(
     command.stderr.on("data", (line) => {
         opts?.onStderr?.(line);
     });
-    command.on("close", (code) => {
-        opts?.onExit?.(code);
+    command.on("close", (data) => {
+        opts?.onExit?.(data.code);
     });
     command.on("error", (error) => {
         opts?.onError?.(error);
@@ -47,10 +51,12 @@ export async function spawnServer(
     return child;
 }
 
-export async function downloadServer(reportProgress?: (percent: number | undefined) => void) {
+export async function downloadServer(
+    reportProgress?: (percent: number | undefined) => void,
+) {
     const worker = new ExtractWorker();
     const appDataPath = await appLocalDataDir();
-    const downloadPath = await join(await appLocalDataDir(), "server.tar.gz");
+    const downloadPath = await join(appDataPath, "server.tar.gz");
 
     const url = `https://github.com/pros-rs/pros-simulator/releases/latest/download/pros-simulator-server-${targetTriple}.tar.gz`;
     reportProgress?.(0);
@@ -58,11 +64,16 @@ export async function downloadServer(reportProgress?: (percent: number | undefin
         url,
         downloadPath,
         (progress, total) => reportProgress?.(progress / total),
-        new Map([[ "User-Agent", "pros-simulator-gui/1.0"], [ "Accept", "application/gzip" ]]),
-      );
+        new Map([
+            ["User-Agent", "pros-simulator-gui/1.0"],
+            ["Accept", "application/gzip"],
+        ]),
+    );
     reportProgress?.(undefined);
 
-    const tgzData = await readBinaryFile(downloadPath, { dir: BaseDirectory.AppLocalData });
+    const tgzData = await readBinaryFile(downloadPath, {
+        dir: BaseDirectory.AppLocalData,
+    });
     const file = await new Promise<Uint8Array>((resolve, reject) => {
         worker.addEventListener(
             "message",
@@ -86,6 +97,18 @@ export async function downloadServer(reportProgress?: (percent: number | undefin
     await writeBinaryFile(binaryName, file, {
         dir: BaseDirectory.AppLocalData,
     });
+    if (!targetTriple.includes("windows")) {
+        const chmod = new Command("chmod", [
+            "+x",
+            await join(appDataPath, binaryName),
+        ]);
+        const child = await chmod.execute();
+        if (child.code !== 0) {
+            throw new Error(
+                `Failed to make ${binaryName} executable: ${child.stderr}`,
+            );
+        }
+    }
 }
 
 export async function appInstallStatus() {

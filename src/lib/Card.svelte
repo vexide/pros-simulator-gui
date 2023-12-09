@@ -1,6 +1,7 @@
 <script lang="ts">
     import { twMerge } from "tailwind-merge";
     export let title: string | undefined = undefined;
+    export let titleCentered = false;
     let className = "";
     export { className as class };
 </script>
@@ -11,8 +12,20 @@
         className,
     )}
 >
-    {#if title}
-        <h2 class="mb-1 self-center text-xl font-bold">{title}</h2>
-    {/if}
+    <div class="flex w-full">
+        {#if title}
+            <h2
+                class={twMerge(
+                    "mb-1 text-xl font-bold",
+                    titleCentered && "self-center",
+                )}
+            >
+                {title}
+            </h2>
+        {/if}
+        <div class="flex-1">
+            <slot name="actions" />
+        </div>
+    </div>
     <slot />
 </div>

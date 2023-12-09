@@ -76,6 +76,29 @@
                 "exit": true,
                 "relaunch": false,
                 "relaunchDangerousAllowSymlinkMacos": false
+            },
+            "shell": {
+                "all": false,
+                "execute": true,
+                "scope": [
+                    {
+                        "name": "pros-simulator-server",
+                        "cmd": "$APPLOCALDATA/pros-simulator-server",
+                        "args": ["--stdio", { "validator": ".+" }]
+                    },
+                    {
+                        "name": "pros-simulator-server.exe",
+                        "cmd": "$APPLOCALDATA/pros-simulator-server.exe",
+                        "args": ["--stdio", { "validator": ".+" }]
+                    },
+                    {
+                        "name": "chmod",
+                        "cmd": "chmod",
+                        "args": ["+x", { "validator": ".+" }]
+                    }
+                ],
+                "open": "^file://.+",
+                "sidecar": false
             }
         },
         "bundle": {
@@ -102,9 +125,6 @@
                 "width": 800,
                 "height": 600,
                 "transparent": true,
-                "titleBarStyle": "Overlay",
-                "decorations": false,
-                "hiddenTitle": true,
                 "minWidth": 500,
                 "minHeight": 300
             }

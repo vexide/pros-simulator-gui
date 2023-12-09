@@ -21,11 +21,4 @@
             PROS Simulator
         {/if}
     </h1>
-
-    <ul class="px-2">
-        <ToolbarItem tooltip="Start simulator">
-            <PlaySolid slot="icon" />
-            <span>Start</span>
-        </ToolbarItem>
-    </ul>
 </header>

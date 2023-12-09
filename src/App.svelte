@@ -10,6 +10,7 @@
     import FirstTimeSetup from "./lib/FirstTimeSetup.svelte";
     import Modal from "./lib/Modal.svelte";
     import { writable } from "svelte/store";
+    import "./splitpanes.scss";
 
     let installInfo = appInstallStatus();
     let installModalOpen = writable(false);
@@ -40,9 +41,7 @@
     }
 </script>
 
-<div class="flex h-full flex-col text-black dark:text-white">
-    <Titlebar />
-
+<div class="flex h-full flex-col overflow-hidden text-black dark:text-white">
     {#await installInfo then components}
         {#if $workspace}
             <WorkspaceView />
@@ -51,7 +50,7 @@
                 <Modal open={installModalOpen}>
                     <FirstTimeSetup {components} />
                 </Modal>
-                <Card title="Get Started">
+                <Card title="Get Started" titleCentered>
                     <div class="grid grid-cols-2 gap-4 self-stretch">
                         <Button onClick={pickWorkspace} class="flex-1"
                             >Open workspace</Button

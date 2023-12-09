@@ -1,0 +1,41 @@
+.splitpanes {
+    .splitpanes__pane {
+        @apply flex;
+    }
+    .splitpanes__splitter {
+        box-sizing: border-box;
+        position: relative;
+        flex-shrink: 0;
+        @apply bg-transparent;
+        &::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            @apply rounded-full bg-neutral-500 opacity-50 transition-opacity duration-500;
+        }
+        &:hover::after {
+            @apply opacity-100;
+        }
+        &:first-child {
+            cursor: auto;
+        }
+    }
+}
+.splitpanes .splitpanes .splitpanes__splitter {
+    z-index: 1;
+}
+.splitpanes--vertical > .splitpanes__splitter,
+.splitpanes--vertical > .splitpanes__splitter {
+    @apply w-4 cursor-row-resize;
+    &:after {
+        @apply -ml-0.5 h-32 w-1 -translate-y-1/2 rounded-full;
+    }
+}
+.splitpanes--horizontal > .splitpanes__splitter,
+.splitpanes--horizontal > .splitpanes__splitter {
+    @apply h-4 cursor-row-resize;
+    &:after {
+        @apply -mt-0.5 h-1 w-32 -translate-x-1/2 rounded-full;
+    }
+}
