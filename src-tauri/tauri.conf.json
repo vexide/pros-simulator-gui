@@ -56,12 +56,6 @@
                 "open": true,
                 "save": false
             },
-            "http": {
-                "request": true,
-                "scope": [
-                    "https://github.com/pros-rs/pros-simulator/releases/latest/download/*"
-                ]
-            },
             "fs": {
                 "scope": ["$APPLOCALDATA/*"],
                 "writeFile": true,
