@@ -3,7 +3,9 @@
 
 use tauri::Manager;
 use tauri_plugin_sql::{Migration, MigrationKind};
-use window_vibrancy::{apply_acrylic, apply_blur, apply_vibrancy, NSVisualEffectMaterial};
+use window_vibrancy::{
+    apply_acrylic, apply_blur, apply_mica, apply_vibrancy, NSVisualEffectMaterial,
+};
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 
@@ -37,17 +39,10 @@ fn main() {
             let window = app.get_window("main").unwrap();
 
             #[cfg(target_os = "macos")]
-            apply_vibrancy(
-                &window,
-                NSVisualEffectMaterial::UnderWindowBackground,
-                None,
-                None,
-            )
-            .unwrap();
+            apply_vibrancy(&window, NSVisualEffectMaterial::FullScreenUI, None, None).unwrap();
 
             #[cfg(target_os = "windows")]
-            apply_blur(&window, Some((200, 200, 200, 230)))
-                .expect("Unsupported platform! 'apply_blur' is only supported on Windows");
+            let _ = apply_mica(&window, None);
 
             #[cfg(target_os = "macos")]
             if let Ok(ns_window) = window.ns_window() {
