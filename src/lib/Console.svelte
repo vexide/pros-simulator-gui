@@ -26,6 +26,7 @@
 
     terminal.registerLinkProvider(
         new LinkProvider(
+            // @ts-expect-error
             terminal,
             pathRegex,
             (e, text) => {

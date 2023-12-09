@@ -12,11 +12,13 @@ import type { WorkerEvent as ExtractWorkerEvent } from "./sidecar/extract-worker
 import { download } from "tauri-plugin-upload-api";
 import { Collection } from "@discordjs/collection";
 
-const targetTriple = await invoke<string>("get_target");
-let binaryName = "pros-simulator-server";
-if (targetTriple.includes("windows")) {
-    binaryName += ".exe";
-}
+const env = invoke<string>("get_target").then((targetTriple) => {
+    let binaryName = "pros-simulator-server";
+    if (targetTriple.includes("windows")) {
+        binaryName += ".exe";
+    }
+    return { targetTriple, binaryName };
+});
 
 export interface SpawnServerOptions {
     abort?: AbortSignal;
@@ -30,7 +32,7 @@ export async function spawnServer(
     wasmPath: string,
     opts?: SpawnServerOptions,
 ): Promise<Child> {
-    const command = new Command(binaryName, ["--stdio", wasmPath]);
+    const command = new Command((await env).binaryName, ["--stdio", wasmPath]);
     command.stdout.on("data", (line) => {
         const json = JSON.parse(line);
         opts?.onData?.(json);
@@ -58,7 +60,9 @@ export async function downloadServer(
     const appDataPath = await appLocalDataDir();
     const downloadPath = await join(appDataPath, "server.tar.gz");
 
-    const url = `https://github.com/pros-rs/pros-simulator/releases/latest/download/pros-simulator-server-${targetTriple}.tar.gz`;
+    const url = `https://github.com/pros-rs/pros-simulator/releases/latest/download/pros-simulator-server-${
+        (await env).targetTriple
+    }.tar.gz`;
     reportProgress?.(0);
     await download(
         url,
@@ -94,18 +98,20 @@ export async function downloadServer(
         worker.postMessage(tgzData, { transfer: [tgzData.buffer] });
     });
 
-    await writeBinaryFile(binaryName, file, {
+    await writeBinaryFile((await env).binaryName, file, {
         dir: BaseDirectory.AppLocalData,
     });
-    if (!targetTriple.includes("windows")) {
+    if (!(await env).targetTriple.includes("windows")) {
         const chmod = new Command("chmod", [
             "+x",
-            await join(appDataPath, binaryName),
+            await join(appDataPath, (await env).binaryName),
         ]);
         const child = await chmod.execute();
         if (child.code !== 0) {
             throw new Error(
-                `Failed to make ${binaryName} executable: ${child.stderr}`,
+                `Failed to make ${(await env).binaryName} executable: ${
+                    child.stderr
+                }`,
             );
         }
     }
@@ -114,7 +120,10 @@ export async function downloadServer(
 export async function appInstallStatus() {
     const status = new Collection<string, boolean>();
     status.set("App", true);
-    const serverPath = await join(await appLocalDataDir(), binaryName);
+    const serverPath = await join(
+        await appLocalDataDir(),
+        (await env).binaryName,
+    );
     const serverExists = await exists(serverPath, {
         dir: BaseDirectory.AppLocalData,
     });

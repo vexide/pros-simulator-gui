@@ -6,8 +6,8 @@
         "distDir": "../dist"
     },
     "package": {
-        "productName": "pros-simulator-gui",
-        "version": "0.0.0"
+        "productName": "PROS Simulator",
+        "version": "0.1.0"
     },
     "tauri": {
         "allowlist": {
@@ -104,7 +104,14 @@
         "bundle": {
             "active": true,
             "targets": "all",
+            "category": "DeveloperTool",
+            "publisher": "pros-rs",
+            "shortDescription": "Simulate VEX robots without real hardware.",
+            "copyright": "Copyright © 2023 pros-rs. All rights reserved.",
             "identifier": "rs.pros.simulator",
+            "macOS": {
+                "signingIdentity": "-"
+            },
             "icon": [
                 "icons/32x32.png",
                 "icons/128x128.png",

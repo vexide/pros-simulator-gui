@@ -10,7 +10,7 @@
     import { join } from "@tauri-apps/api/path";
     import Console from "./Console.svelte";
     import { Splitpanes, Pane } from "svelte-splitpanes";
-    import type { Terminal } from "xterm";
+    import type { Terminal } from "@xterm/xterm";
     import colors from "ansi-colors";
 
     colors.enabled = true;
