@@ -42,7 +42,7 @@
 
 <div class="relative flex-1 self-center" bind:this={container}>
     <div
-        class="font-lcd-sans absolute left-0 top-0 flex h-[486px] w-[864px] origin-top-left flex-col bg-[#00aad6] text-5xl font-bold text-black"
+        class="font-lcd-sans absolute left-0 top-0 flex h-[486px] w-[864px] origin-top-left flex-col rounded-3xl bg-[#00aad6] text-5xl font-bold text-black"
         bind:this={lcd}
     >
         <div
