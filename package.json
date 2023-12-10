@@ -12,6 +12,8 @@
     },
     "dependencies": {
         "@discordjs/collection": "^2.0.0",
+        "@fontsource/dejavu-mono": "^5.0.7",
+        "@fontsource/dejavu-sans": "^5.0.7",
         "@tauri-apps/api": "^1.5.1",
         "@xterm/addon-fit": "0.9.0-beta.1",
         "@xterm/addon-webgl": "0.17.0-beta.1",

@@ -8,7 +8,7 @@
 
 <div
     class={twMerge(
-        "flex flex-col items-start gap-4 rounded-[10px] border bg-white px-6 py-4 shadow-lg dark:border-white/20 dark:bg-zinc-900 dark:bg-opacity-80",
+        "flex flex-col gap-4 rounded-[10px] border bg-white px-6 py-4 shadow-lg dark:border-white/20 dark:bg-zinc-900 dark:bg-opacity-80",
         className,
     )}
 >

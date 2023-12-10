@@ -2,7 +2,12 @@
 export default {
     content: ["./index.html", "./src/**/*.svelte"],
     theme: {
-        extend: {},
+        extend: {
+            fontFamily: {
+                "lcd-sans": ["DejaVu Sans", "sans-serif"],
+                "lcd-mono": ["DejaVu Mono", "monospace"],
+            },
+        },
     },
     plugins: [],
 };

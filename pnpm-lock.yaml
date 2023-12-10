@@ -8,6 +8,12 @@ dependencies:
   '@discordjs/collection':
     specifier: ^2.0.0
     version: 2.0.0
+  '@fontsource/dejavu-mono':
+    specifier: ^5.0.7
+    version: 5.0.7
+  '@fontsource/dejavu-sans':
+    specifier: ^5.0.7
+    version: 5.0.7
   '@tauri-apps/api':
     specifier: ^1.5.1
     version: 1.5.1
@@ -324,6 +330,14 @@ packages:
     requiresBuild: true
     dev: true
     optional: true
+
+  /@fontsource/dejavu-mono@5.0.7:
+    resolution: {integrity: sha512-nfvKn+XQmB5sFGNS5+9wCEl+3+3gQq9qC18sVR9DOfgLwga4VE6Tm6FTW0vkVqhhy1Ja05XYVfQIWY2HrWX2Rg==}
+    dev: false
+
+  /@fontsource/dejavu-sans@5.0.7:
+    resolution: {integrity: sha512-pDCqFXQf/wrA1atIb1f904YrFa8O/eBqK4vk8cmKgRj02/WI3ridkEWo8rfWbZMWgcaQsXh5POyoeXLxwOugnw==}
+    dev: false
 
   /@jridgewell/gen-mapping@0.3.3:
     resolution: {integrity: sha512-HLhSWOLRi875zjjMG/r+Nv0oCW8umGb0BgEhyX3dDX3egwZtB8PqLnjz3yedt8R5StBrzcg4aBpnh8UA9D1BoQ==}
