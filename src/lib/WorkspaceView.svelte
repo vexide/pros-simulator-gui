@@ -21,12 +21,20 @@
     let server: Child | undefined;
     let terminal: Terminal;
     let lcdLines: string[] | undefined;
+    let elapsedSeconds = 0;
+    let timer: number | undefined;
 
     function start() {
         if (server) return;
         lcdLines = undefined;
         serverPromise = (async () => {
             terminal.writeln("Starting server...");
+            elapsedSeconds = 0;
+            clearInterval(timer);
+            timer = setInterval(() => {
+                terminal.writeln("tick");
+                elapsedSeconds += 1;
+            }, 1000);
             if ($workspace) {
                 const wasmPath = await join(
                     $workspace.path,
@@ -77,6 +85,10 @@
                     lcdLines = undefined;
                     break;
                 }
+                case "RobotCodeFinished": {
+                    clearInterval(timer);
+                    break;
+                }
             }
         } else if (typeof data === "object" && data) {
             const variant = Object.keys(data)[0];
@@ -114,7 +126,7 @@
                 </div>
             </Card>
             <Card title="LCD Display" class="">
-                <LcdDisplay lines={lcdLines} />
+                <LcdDisplay lines={lcdLines} {elapsedSeconds} />
             </Card>
         </div>
     </Pane>
