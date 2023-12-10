@@ -51,7 +51,7 @@
                 </Modal>
                 <Card title="Get Started" titleCentered>
                     <div class="grid grid-cols-2 gap-4 self-stretch">
-                        <Button onClick={pickWorkspace} class="flex-1"
+                        <Button on:click={pickWorkspace} class="flex-1"
                             >Open workspace</Button
                         >
                         <p class="secondary flex-1 text-center">

@@ -14,6 +14,10 @@
     export const terminal = new Terminal({
         convertEol: true,
         fontFamily: "ui-monospace, monospace",
+        allowTransparency: true,
+        theme: {
+            background: "#00000000",
+        },
     });
     const fitAddon = new FitAddon();
     const webgl = new WebglAddon();
@@ -50,9 +54,18 @@
         terminal.open(term!);
         fitAddon.fit();
         resize.observe(term!);
+        terminal.focus();
+        const focused = document.activeElement;
+        terminal.focus();
+        if (focused instanceof HTMLElement) {
+            focused.focus();
+        }
     });
 </script>
 
 <div class="relative h-full w-full">
-    <div class="absolute inset-0 bg-black" bind:this={term} />
+    <div
+        class="absolute inset-0 overflow-hidden rounded-md bg-black bg-transparent p-2"
+        bind:this={term}
+    />
 </div>

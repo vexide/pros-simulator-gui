@@ -1,5 +1,8 @@
 <script lang="ts">
+    import { setContext } from "svelte";
     import { twMerge } from "tailwind-merge";
+    import Button, { buttonStyle, type ButtonContext } from "./Button.svelte";
+    import WithContext from "./WithContext.svelte";
     export let title: string | undefined = undefined;
     export let titleCentered = false;
     let className = "";
@@ -16,15 +19,17 @@
         {#if title}
             <h2
                 class={twMerge(
-                    "mb-1 text-xl font-bold",
+                    "mb-1 flex-1 text-xl font-bold",
                     titleCentered && "self-center",
                 )}
             >
                 {title}
             </h2>
         {/if}
-        <div class="flex-1">
-            <slot name="actions" />
+        <div class="flex flex-1 justify-end">
+            <WithContext ctx={buttonStyle} value={{ plain: true }}>
+                <slot name="actions" />
+            </WithContext>
         </div>
     </div>
     <slot />

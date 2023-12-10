@@ -104,13 +104,13 @@
                 <div class="grid grid-cols-2 grid-rows-2 gap-4 self-stretch">
                     <Button
                         large
-                        onClick={() => {
+                        on:click={() => {
                             Workspace.close();
                         }}
                     >
                         Close workspace
                     </Button>
-                    <Button large onClick={start}>Start simulator</Button>
+                    <Button large on:click={start}>Start simulator</Button>
                 </div>
             </Card>
             <Card title="LCD Display" class="">
@@ -119,7 +119,16 @@
         </div>
     </Pane>
     <Pane minSize={25}>
-        <Card title="Console" class="flex-1">
+        <Card title="Console" class="flex-1 gap-2">
+            <svelte:fragment slot="actions">
+                <Button
+                    on:click={() => {
+                        terminal.clear();
+                    }}
+                >
+                    Clear
+                </Button>
+            </svelte:fragment>
             <Console bind:terminal />
         </Card>
     </Pane>

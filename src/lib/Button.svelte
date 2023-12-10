@@ -1,7 +1,7 @@
 <script context="module" lang="ts">
     export type ButtonContext =
         | {
-              large: boolean;
+              plain: boolean;
           }
         | undefined;
     export const buttonStyle = Symbol("button-style");
@@ -11,10 +11,10 @@
     import { twMerge } from "tailwind-merge";
     import { getContext, onMount } from "svelte";
     const context = getContext<ButtonContext | undefined>(buttonStyle);
-    export let onClick: () => void;
-    export let large = context?.large ?? false;
+    export let large = false;
     export let primary = false;
     export let disabled = false;
+    export let plain = context?.plain ?? false;
     let className = "";
     export { className as class };
 
@@ -46,11 +46,13 @@
         primary && "font-semibold",
         disabled &&
             "pointer-events-none bg-neutral-100 text-black/50 shadow-neutral-500/10 transition-colors dark:bg-neutral-800 dark:text-white/50",
+        plain &&
+            "self-baseline bg-transparent shadow-none dark:border-solid dark:border-white/20 dark:bg-transparent dark:active:bg-neutral-500/50",
         className,
     )}
     type="button"
     {disabled}
-    on:click={onClick}
+    on:click
 >
     <slot />
 </button>

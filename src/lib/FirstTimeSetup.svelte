@@ -8,7 +8,7 @@
     import TransitionHeight from "./TransitionHeight.svelte";
     import type { Action } from "svelte/action";
     import type { TransitionConfig } from "svelte/transition";
-    import { downloadServer } from '../sidecar.ts';
+    import { downloadServer } from "../sidecar.ts";
 
     const dismiss = getContext<ctx.DismissContext>(ctx.dismiss);
     enum Page {
@@ -79,14 +79,14 @@
 <Divider />
 <div class="sticky bottom-0 flex justify-between gap-3 self-stretch px-6 py-3">
     <Button
-        onClick={() => {
+        on:click={() => {
             exit(0);
         }}
         large>Quit</Button
     >
     <div class="flex-1" />
     <Button
-        onClick={() => {
+        on:click={() => {
             page -= 1;
         }}
         large
@@ -95,19 +95,21 @@
         Back
     </Button>
     <Button
-        onClick={() => {
+        on:click={() => {
             if (page === Page.Welcome) {
                 page += 1;
                 if (!download) {
                     download = downloadServer((progress) => {
                         downloadProgress = progress;
-                    }).then(() => {
-                        downloadFinished = true;
-                        downloadProgress = 100;
-                    }).catch((err) => {
-                        error = err;
-                        downloadProgress = 0;
-                    });
+                    })
+                        .then(() => {
+                            downloadFinished = true;
+                            downloadProgress = 100;
+                        })
+                        .catch((err) => {
+                            error = err;
+                            downloadProgress = 0;
+                        });
                 }
             } else {
                 dismiss?.();
