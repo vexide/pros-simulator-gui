@@ -65,7 +65,7 @@
 
 <div class="relative h-full w-full">
     <div
-        class="absolute inset-0 overflow-hidden rounded-md bg-black bg-transparent p-2"
+        class="absolute inset-0 overflow-hidden rounded-md bg-neutral-900 p-2 dark:bg-transparent"
         bind:this={term}
     />
 </div>
