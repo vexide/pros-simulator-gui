@@ -1,13 +1,14 @@
 import { readonly, writable, type Writable } from "svelte/store";
 import { database, type RecentWorkspace } from "./database.ts";
 import { invoke } from "@tauri-apps/api";
+import { sep } from "@tauri-apps/api/path";
 
 const workspaceStore: Writable<Workspace | null> = writable(null);
 export const workspace = readonly(workspaceStore);
 
 export class Workspace {
     static open(path: string) {
-        const components = path.split("/");
+        const components = path.split(sep);
         let name = components.pop();
         if (name === "") {
             name = components.pop();
