@@ -42,7 +42,10 @@ fn main() {
             apply_vibrancy(&window, NSVisualEffectMaterial::FullScreenUI, None, None).unwrap();
 
             #[cfg(target_os = "windows")]
-            let _ = apply_mica(&window, None);
+            {
+                let _ = apply_mica(&window, None);
+                window.set_decorations(true).unwrap();
+            }
 
             #[cfg(target_os = "macos")]
             if let Ok(ns_window) = window.ns_window() {
