@@ -1,4 +1,4 @@
-use std::{env, process::Command};
+use std::env;
 
 fn main() {
     let triple = env::var("TARGET").unwrap();
