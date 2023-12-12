@@ -109,26 +109,22 @@
     });
 </script>
 
+<div class="grid grid-cols-2 gap-4 self-stretch p-4 pb-0">
+    <Button
+        large
+        on:click={() => {
+            Workspace.close();
+        }}
+    >
+        Close workspace
+    </Button>
+    <Button large on:click={start}>Start simulator</Button>
+</div>
 <Splitpanes class="flex-1 p-4" horizontal={true} theme="">
     <Pane minSize={20}>
-        <div class="flex w-full flex-[2] gap-4">
-            <Card title="Simulator" class="flex-1 flex-shrink-0">
-                <div class="grid grid-cols-2 grid-rows-2 gap-4 self-stretch">
-                    <Button
-                        large
-                        on:click={() => {
-                            Workspace.close();
-                        }}
-                    >
-                        Close workspace
-                    </Button>
-                    <Button large on:click={start}>Start simulator</Button>
-                </div>
-            </Card>
-            <Card title="LCD Display" class="">
-                <LcdDisplay lines={lcdLines} {elapsedSeconds} />
-            </Card>
-        </div>
+        <Card title="LCD Display" class="w-full">
+            <LcdDisplay lines={lcdLines} {elapsedSeconds} />
+        </Card>
     </Pane>
     <Pane minSize={25}>
         <Card title="Console" class="flex-1 gap-2">
