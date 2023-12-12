@@ -3,9 +3,7 @@
 
 use tauri::Manager;
 use tauri_plugin_sql::{Migration, MigrationKind};
-use window_vibrancy::{
-    apply_acrylic, apply_blur, apply_mica, apply_vibrancy, NSVisualEffectMaterial,
-};
+use window_vibrancy::{apply_blur, apply_mica, apply_vibrancy, NSVisualEffectMaterial};
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 
@@ -43,10 +41,9 @@ fn main() {
 
             #[cfg(target_os = "windows")]
             {
-                apply_blur(&window, None).unwrap();
-                // if let Err(_) = apply_mica(&window, None) {
-                //     apply_blur(&window, None).unwrap();
-                // }
+                if let Err(_) = apply_mica(&window, None) {
+                    apply_blur(&window, None);
+                }
                 window.set_decorations(true).unwrap();
             }
 
