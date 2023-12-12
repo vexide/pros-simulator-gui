@@ -43,16 +43,11 @@ fn main() {
 
             #[cfg(target_os = "windows")]
             {
-                let _ = apply_mica(&window, None);
+                apply_blur(&window, None).unwrap();
+                // if let Err(_) = apply_mica(&window, None) {
+                //     apply_blur(&window, None).unwrap();
+                // }
                 window.set_decorations(true).unwrap();
-            }
-
-            #[cfg(target_os = "macos")]
-            if let Ok(ns_window) = window.ns_window() {
-                use cocoa::appkit::NSWindow;
-                use objc::{class, msg_send, sel, sel_impl};
-                let id = ns_window as cocoa::base::id;
-                unsafe { id.setToolbar_(msg_send![class!(NSToolbar), new]) }
             }
 
             Ok(())

@@ -42,7 +42,7 @@
 
 <div class="relative flex-1 self-center" bind:this={container}>
     <div
-        class="font-lcd-sans absolute left-0 top-0 flex h-[486px] w-[864px] origin-top-left flex-col rounded-3xl bg-[#00aad6] text-5xl font-bold text-black"
+        class="absolute left-0 top-0 flex h-[486px] w-[864px] origin-top-left flex-col rounded-3xl bg-[#00aad6] font-lcd-sans text-5xl font-bold text-black"
         bind:this={lcd}
     >
         <div
@@ -67,7 +67,7 @@
                     class="pointer-events-none absolute inset-0 rounded-3xl border-4 border-[#152c42] border-opacity-25"
                 ></div>
                 <pre
-                    class="[&>*]:font-lcd-mono flex flex-1 select-auto flex-col justify-center bg-[#5ABC03] px-2 align-middle text-4xl text-[#323D13]">{lines.join(
+                    class="flex flex-1 select-auto flex-col justify-center bg-[#5ABC03] px-2 align-middle text-4xl text-[#323D13] [&>*]:font-lcd-mono">{lines.join(
                         "\n",
                     )}</pre>
                 <div class="flex gap-40 text-2xl">
@@ -77,7 +77,7 @@
                 </div>
             </div>
         {:else}
-            <div class="flex-1 bg-black" />
+            <div class="flex-1 rounded-b-3xl bg-black" />
         {/if}
     </div>
 </div>

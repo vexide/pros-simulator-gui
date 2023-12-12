@@ -13,6 +13,7 @@
     import type { Terminal } from "@xterm/xterm";
     import colors from "ansi-colors";
     import LcdDisplay from "./LcdDisplay.svelte";
+    import XmarkSolid from "svelte-awesome-icons/XmarkSolid.svelte";
 
     colors.enabled = true;
 
@@ -102,6 +103,14 @@
         }
     }
 
+    function stop() {
+        if (server) {
+            shutdownServer.abort();
+            shutdownServer = new AbortController();
+        }
+        clearInterval(timer);
+    }
+
     onMount(() => {
         return () => {
             shutdownServer.abort();
@@ -109,16 +118,22 @@
     });
 </script>
 
-<div class="grid grid-cols-2 gap-4 self-stretch p-4 pb-0">
+<div class="flex gap-4 self-stretch p-4 pb-0">
     <Button
+        class="flex items-center justify-center self-stretch p-2.5"
+        plain
         large
+        title="Close workspace"
         on:click={() => {
             Workspace.close();
         }}
     >
-        Close workspace
+        <XmarkSolid size="14" />
     </Button>
-    <Button large on:click={start}>Start simulator</Button>
+    <Button large on:click={start}>Start robot code</Button>
+    <Button large on:click={stop} disabled={server === undefined}>
+        Stop robot code
+    </Button>
 </div>
 <Splitpanes class="flex-1 p-4" horizontal={true} theme="">
     <Pane minSize={20}>
