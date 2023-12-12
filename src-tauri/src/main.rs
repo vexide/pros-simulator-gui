@@ -41,9 +41,7 @@ fn main() {
 
             #[cfg(target_os = "windows")]
             {
-                if let Err(_) = apply_mica(&window, None) {
-                    apply_blur(&window, None);
-                }
+                if let Err(_) = apply_mica(&window, None) {}
                 window.set_decorations(true).unwrap();
             }
 

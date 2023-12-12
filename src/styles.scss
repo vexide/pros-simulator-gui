@@ -67,3 +67,7 @@ progress:indeterminate::-webkit-progress-value {
 .xterm {
     color-scheme: dark;
 }
+
+.windows10 {
+    @apply bg-neutral-300 dark:bg-stone-900;
+}

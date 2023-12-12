@@ -1,3 +1,8 @@
+<script lang="ts" context="module">
+    import { isWindows10 } from "./detectWindows10.js";
+    const windows10 = isWindows10();
+</script>
+
 <script lang="ts">
     import Card from "./lib/Card.svelte";
     import Button from "./lib/Button.svelte";
@@ -10,6 +15,7 @@
     import Modal from "./lib/Modal.svelte";
     import { writable } from "svelte/store";
     import "./splitpanes.scss";
+    import { onMount } from "svelte";
 
     let installInfo = appInstallStatus();
     let installModalOpen = writable(false);
@@ -38,6 +44,18 @@
         if (typeof path !== "string") return;
         Workspace.open(path);
     }
+
+    onMount(() => {
+        windows10.then((isWindows10) => {
+            if (isWindows10) {
+                document.body.classList.add("windows10");
+            }
+        });
+
+        return () => {
+            document.body.classList.remove("windows10");
+        };
+    });
 </script>
 
 <div class="flex h-full flex-col overflow-hidden text-black dark:text-white">
