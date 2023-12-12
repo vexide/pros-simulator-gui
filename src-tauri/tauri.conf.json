@@ -89,6 +89,11 @@
                         "name": "chmod",
                         "cmd": "chmod",
                         "args": ["+x", { "validator": ".+" }]
+                    },
+                    {
+                        "name": "cargo",
+                        "cmd": "cargo",
+                        "args": true
                     }
                 ],
                 "open": "^file://.+",

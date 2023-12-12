@@ -14,10 +14,12 @@
     import colors from "ansi-colors";
     import LcdDisplay from "./LcdDisplay.svelte";
     import XmarkSolid from "svelte-awesome-icons/XmarkSolid.svelte";
+    import { buildProject } from "../build.ts";
 
     colors.enabled = true;
 
     let shutdownServer = new AbortController();
+    let cancelBuild = new AbortController();
     let serverPromise: Promise<void> | undefined;
     let server: Child | undefined;
     let terminal: Terminal;
@@ -116,6 +118,29 @@
             shutdownServer.abort();
         };
     });
+
+    async function build() {
+        if ($workspace) {
+            cancelBuild.abort();
+            cancelBuild = new AbortController();
+            try {
+                await buildProject($workspace.path, {
+                    abort: cancelBuild.signal,
+                    onStderr(data) {
+                        terminal.write(data);
+                    },
+                    onExit(code) {
+                        terminal.writeln(`Process exited with code ${code}.`);
+                    },
+                    onError(error) {
+                        terminal.writeln(`Error: ${error.message}`);
+                    },
+                });
+            } catch (err) {
+                terminal.writeln(`Failed to build: ${String(err)}`);
+            }
+        }
+    }
 </script>
 
 <div class="flex gap-4 self-stretch p-4 pb-0">
@@ -134,6 +159,7 @@
     <Button large on:click={stop} disabled={server === undefined}>
         Stop robot code
     </Button>
+    <Button large on:click={build}>Build (Cargo)</Button>
 </div>
 <Splitpanes class="flex-1 p-4" horizontal={true} theme="">
     <Pane minSize={20}>
