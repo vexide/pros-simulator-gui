@@ -5,21 +5,6 @@
     import { workspace } from "../workspace.ts";
     import LcdButton from "./LcdButton.svelte";
 
-    const gray = "#888";
-    const darkGreen = "#323D13";
-    const silver = "#ccc";
-    const white = "#fff";
-    const skyBlue = "#00aad6";
-    const green = "#5ABC03";
-    const black = "#000";
-    const darkGray = "#152c42";
-
-    const sans = '80px "DejaVu Sans"';
-    const mono = '80px "DejaVu Mono"';
-
-    const width = 1600;
-    const height = 900;
-
     let container: HTMLDivElement;
     let lcd: HTMLDivElement;
 
@@ -67,7 +52,7 @@
                     class="pointer-events-none absolute inset-0 rounded-3xl border-4 border-[#152c42] border-opacity-25"
                 ></div>
                 <pre
-                    class="flex flex-1 select-auto flex-col justify-center bg-[#5ABC03] px-2 align-middle text-4xl text-[#323D13] [&>*]:font-lcd-mono">{lines.join(
+                    class="flex flex-1 cursor-auto select-text flex-col justify-center bg-[#5ABC03] px-2 align-middle text-4xl text-[#323D13] [&>*]:font-lcd-mono">{lines.join(
                         "\n",
                     )}</pre>
                 <div class="flex gap-40 text-2xl">

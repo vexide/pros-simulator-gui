@@ -1,5 +1,6 @@
 import { Command, type Child } from "@tauri-apps/api/shell";
 import { gray } from "ansi-colors";
+import { sep } from "@tauri-apps/api/path";
 
 export interface BuildOptions {
     abort?: AbortSignal;
@@ -18,7 +19,7 @@ export function buildProject(
         "--color",
         "always",
         "--manifest-path",
-        `${path}/Cargo.toml`,
+        `${path}${sep}Cargo.toml`,
         "--message-format",
         "json-render-diagnostics",
         "--target",
