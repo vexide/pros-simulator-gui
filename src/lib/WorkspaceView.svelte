@@ -17,6 +17,7 @@
     import CircleStopRegular from "svelte-awesome-icons/CircleStopRegular.svelte";
     import CirclePlayRegular from "svelte-awesome-icons/CirclePlayRegular.svelte";
     import HammerSolid from "svelte-awesome-icons/HammerSolid.svelte";
+    import Devices from "./Devices.svelte";
 
     const start = () => Workspace.mutate((ws) => ws.startServer());
     const stop = () => Workspace.mutate((ws) => ws.stopServer());
@@ -58,8 +59,9 @@
         <Button large on:click={build} icon={HammerSolid}>Build (Cargo)</Button>
     </div>
     <Splitpanes class="flex-1 p-4" horizontal={true} theme="">
-        <Pane minSize={20}>
-            <Card title="LCD Display" class="w-full">
+        <Pane minSize={20} class="flex gap-4">
+            <Devices />
+            <Card title="LCD Display" class="flex-1">
                 <LcdDisplay
                     lines={$workspace?.state.lcdLines}
                     elapsedSeconds={$workspace?.state.elapsedSeconds}

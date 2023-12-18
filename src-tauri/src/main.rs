@@ -1,7 +1,9 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-use tauri::Manager;
+use gilrs::{Event, Gilrs};
+use serde_json::json;
+use tauri::{AppHandle, Manager, Runtime, Window};
 use tauri_plugin_sql::{Migration, MigrationKind};
 use window_vibrancy::{apply_blur, apply_mica, apply_vibrancy, NSVisualEffectMaterial};
 
@@ -18,6 +20,31 @@ fn get_home_dir() -> Option<String> {
 #[tauri::command]
 fn get_target() -> &'static str {
     env!("RUSTC_TARGET")
+}
+
+#[tauri::command]
+async fn gamepad_subscribe<R: Runtime>(app: AppHandle<R>, _window: Window<R>) {
+    println!("execute");
+    let mut gilrs = Gilrs::new().unwrap();
+
+    loop {
+        while let Some(Event { id, event, time }) = gilrs.next_event() {
+            let gamepad = gilrs.gamepad(id);
+            let buttons: Vec<_> = gamepad
+                .state()
+                .buttons()
+                .map(|b| (b.0, b.1.is_pressed()))
+                .collect();
+            let axes: Vec<_> = gamepad.state().axes().map(|a| (a.0, a.1.value())).collect();
+            let payload = json!({
+                "id":id,
+                "time": time,
+                "buttons": buttons,
+                "axes": axes,
+            });
+            app.emit_all("gamepad", payload);
+        }
+    }
 }
 
 fn main() {
@@ -52,6 +79,7 @@ fn main() {
         .plugin(tauri_plugin_persisted_scope::init())
         .plugin(db)
         .plugin(tauri_plugin_upload::init())
+        .plugin(tauri_plugin_gamepad::init())
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

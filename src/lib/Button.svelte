@@ -43,7 +43,7 @@
     bind:this={button}
     {title}
     class={twMerge(
-        "flex items-center gap-2 rounded-lg border bg-white px-4 shadow shadow-neutral-500/10 active:bg-neutral-300 dark:border-none dark:bg-neutral-600 dark:shadow-black/30 dark:active:bg-neutral-500",
+        "flex items-center justify-center gap-2 rounded-lg border bg-white px-4 shadow shadow-neutral-500/10 active:bg-neutral-300 dark:border-none dark:bg-neutral-600 dark:shadow-black/30 dark:active:bg-neutral-500",
         large && "py-1.5",
         primary &&
             !disabled &&
