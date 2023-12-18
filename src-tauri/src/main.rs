@@ -21,6 +21,7 @@ fn get_target() -> &'static str {
 }
 
 fn main() {
+    _ = fix_path_env::fix();
     let db = tauri_plugin_sql::Builder::default()
         .add_migrations(
             "sqlite:pros_rs.sqlite",

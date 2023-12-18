@@ -21,19 +21,36 @@ colors.enabled = true;
 
 export const workspace: Writable<Workspace | null> = writable(null);
 
-function mutate<Args extends any[], Ret>(
-    inner: (this: Workspace, ...args: Args) => Ret,
-): (...args: Args) => Ret | undefined {
-    return (...args: Args) => {
-        let ret: Ret | undefined;
-        workspace.update((ws) => {
-            if (ws) {
-                ret = Reflect.apply(inner, ws, args);
+export enum Msg {
+    Info,
+    Error,
+    Progress,
+    Echo,
+}
+
+export class SimTerminal extends Terminal {
+    log(message: string, msg = Msg.Info) {
+        let text: string;
+        switch (msg) {
+            case Msg.Info: {
+                text = colors.gray(message);
+                break;
             }
-            return ws;
-        });
-        return ret;
-    };
+            case Msg.Error: {
+                text = colors.red(message);
+                break;
+            }
+            case Msg.Progress: {
+                text = colors.blue(`=> ${message}`);
+                break;
+            }
+            case Msg.Echo: {
+                text = colors.blue(`$ ${message}`);
+                break;
+            }
+        }
+        this.writeln(text);
+    }
 }
 
 export class Workspace {
@@ -81,7 +98,7 @@ export class Workspace {
     static #lineColPattern = /:(\d+):(\d+)$/;
 
     state = new State();
-    terminal = new Terminal({
+    terminal = new SimTerminal({
         convertEol: true,
         fontFamily: "ui-monospace, monospace",
         allowTransparency: true,
@@ -161,25 +178,28 @@ export class Workspace {
                 "debug",
                 `${this.name}.wasm`,
             );
-            terminal.writeln(colors.gray(`> ${wasmPath}`));
+            terminal.log(wasmPath, Msg.Echo);
 
             try {
                 const server = await spawnServer(wasmPath, {
                     abort: serverProcess.signal,
                     onExit(code) {
-                        terminal.writeln(`Process exited with code ${code}.`);
+                        terminal.log(
+                            `Process exited with code ${code}.`,
+                            code === 0 ? Msg.Info : Msg.Error,
+                        );
                         Workspace.mutate((ws) => ws.afterFinish());
                     },
                     onStderr(data) {
                         terminal.write(data);
                     },
                     onError(error) {
-                        terminal.writeln(`Error: ${error.message}`);
+                        terminal.log(`Error: ${error.message}`, Msg.Error);
                         Workspace.mutate((ws) => ws.afterFinish());
                     },
                     onData(data) {
                         Workspace.mutate((ws) => ws.handleEvent(data));
-                        terminal.writeln(colors.green(JSON.stringify(data)));
+                        // terminal.writeln(colors.green(JSON.stringify(data)));
                     },
                 });
 

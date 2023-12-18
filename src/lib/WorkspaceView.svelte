@@ -14,7 +14,6 @@
     import colors from "ansi-colors";
     import LcdDisplay from "./LcdDisplay.svelte";
     import XmarkSolid from "svelte-awesome-icons/XmarkSolid.svelte";
-    import { buildProject } from "../build.ts";
 
     const start = () => Workspace.mutate((ws) => ws.startServer());
     const stop = () => Workspace.mutate((ws) => ws.stopServer());

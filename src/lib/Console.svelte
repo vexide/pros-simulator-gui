@@ -1,10 +1,7 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import "@xterm/xterm/css/xterm.css";
-    import { Workspace, workspace } from "../workspace.ts";
-
-    const pathRegex =
-        /(\.{0,2}|([a-zA-Z]):\\)(([^<>\/:\|\?\*\"\n]{1,}\\)([^<>\/:\|\?\*\"\n]{1,})|\/([A-z0-9\/\-\_\.]+))/g;
+    import { workspace } from "../workspace.ts";
 
     let term: HTMLDivElement | undefined;
 
@@ -25,6 +22,10 @@
         if (focused instanceof HTMLElement) {
             focused.focus();
         }
+        return () => {
+            resize.disconnect();
+            $workspace?.terminal.dispose();
+        };
     });
 </script>
 
