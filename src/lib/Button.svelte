@@ -10,13 +10,15 @@
 
 <script lang="ts">
     import { twMerge } from "tailwind-merge";
-    import { getContext, onMount } from "svelte";
+    import { getContext, onMount, type ComponentType } from "svelte";
     const context = getContext<ButtonContext | undefined>(buttonStyle);
     export let large = context?.large ?? false;
     export let primary = false;
     export let disabled = false;
     export let plain = context?.plain ?? false;
     export let title: string | undefined = undefined;
+    export let icon: ComponentType | undefined = undefined;
+    export let iconColor = "currentColor";
     let className = "";
     export { className as class };
 
@@ -41,7 +43,7 @@
     bind:this={button}
     {title}
     class={twMerge(
-        "rounded-lg border bg-white px-4 shadow shadow-neutral-500/10 active:bg-neutral-300 dark:border-none dark:bg-neutral-600 dark:shadow-black/30 dark:active:bg-neutral-500",
+        "flex items-center gap-2 rounded-lg border bg-white px-4 shadow shadow-neutral-500/10 active:bg-neutral-300 dark:border-none dark:bg-neutral-600 dark:shadow-black/30 dark:active:bg-neutral-500",
         large && "py-1.5",
         primary &&
             !disabled &&
@@ -57,5 +59,12 @@
     {disabled}
     on:click
 >
+    {#if icon}
+        <svelte:component
+            this={icon}
+            class="h-5 w-5"
+            color={disabled ? "currentColor" : iconColor}
+        />
+    {/if}
     <slot />
 </button>

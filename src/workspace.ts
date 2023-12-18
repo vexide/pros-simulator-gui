@@ -16,6 +16,7 @@ import {
 } from "./pathDetector.ts";
 import { open } from "@tauri-apps/api/shell";
 import { openInVSCode } from "./openFile.ts";
+import { title } from "./window.ts";
 
 colors.enabled = true;
 
@@ -33,7 +34,7 @@ export class SimTerminal extends Terminal {
         let text: string;
         switch (msg) {
             case Msg.Info: {
-                text = colors.gray(message);
+                text = colors.bold(message);
                 break;
             }
             case Msg.Error: {
@@ -45,7 +46,7 @@ export class SimTerminal extends Terminal {
                 break;
             }
             case Msg.Echo: {
-                text = colors.blue(`$ ${message}`);
+                text = colors.gray(`$ ${message}`);
                 break;
             }
         }
@@ -94,8 +95,6 @@ export class Workspace {
         }
         return path;
     }
-
-    static #lineColPattern = /:(\d+):(\d+)$/;
 
     state = new State();
     terminal = new SimTerminal({
@@ -154,7 +153,6 @@ export class Workspace {
     }
 
     tick() {
-        this.terminal.writeln("tick");
         this.state.elapsedSeconds += 1;
     }
 
@@ -169,7 +167,7 @@ export class Workspace {
         this.#serverProcess = serverProcess;
         clearInterval(this.#timer);
         this.state = new State();
-        terminal.writeln("Starting server...");
+        terminal.log("Starting server", Msg.Progress);
         (async () => {
             const wasmPath = await join(
                 this.path,
@@ -235,6 +233,11 @@ export class Workspace {
 
     #handleStringEvent(name: StringEvent) {
         switch (name) {
+            case "RobotCodeStarting": {
+                this.terminal.log("Robot code running", Msg.Progress);
+                this.#timer = setInterval(() => this.tick(), 1000);
+                break;
+            }
             case "LcdInitialized": {
                 this.state.lcdLines = [];
                 break;
@@ -245,6 +248,7 @@ export class Workspace {
             }
             case "RobotCodeFinished": {
                 clearInterval(this.#timer);
+                this.terminal.log("Robot code completed", Msg.Progress);
                 break;
             }
         }
@@ -286,16 +290,33 @@ export class Workspace {
     }
 }
 
-type StringEvent = "LcdInitialized" | "LcdShutdown" | "RobotCodeFinished";
-type ObjectEvent = ["LcdUpdated", string[]] | ["ConsoleMessage", string];
+type StringEvent =
+    | "RobotCodeLoading"
+    | "RobotCodeStarting"
+    | "RobotCodeFinished"
+    | "LcdInitialized"
+    | "LcdShutdown";
+type ObjectEvent =
+    | ["Warning", string]
+    | ["ConsoleMessage", string]
+    | ["RobotCodeError", { message: string; backtrace: string }]
+    | ["LcdUpdated", string[]]
+    | ["LcdColorsUpdated", number, number];
 
 export class State {
     lcdLines: string[] | undefined;
     elapsedSeconds = 0;
 }
 
+let oldWs: Workspace | null = null;
 workspace.subscribe((ws) => {
     if (ws) {
+        title.set(ws.name);
+    } else {
+        title.set("PROS Simulator");
+    }
+
+    if (ws && ws !== oldWs) {
         console.log("Updating recent workspaces");
         database.then(async (db) => {
             await db.execute(
@@ -305,4 +326,5 @@ workspace.subscribe((ws) => {
             );
         });
     }
+    oldWs = ws;
 });

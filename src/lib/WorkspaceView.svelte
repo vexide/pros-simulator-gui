@@ -14,6 +14,9 @@
     import colors from "ansi-colors";
     import LcdDisplay from "./LcdDisplay.svelte";
     import XmarkSolid from "svelte-awesome-icons/XmarkSolid.svelte";
+    import CircleStopRegular from "svelte-awesome-icons/CircleStopRegular.svelte";
+    import CirclePlayRegular from "svelte-awesome-icons/CirclePlayRegular.svelte";
+    import HammerSolid from "svelte-awesome-icons/HammerSolid.svelte";
 
     const start = () => Workspace.mutate((ws) => ws.startServer());
     const stop = () => Workspace.mutate((ws) => ws.stopServer());
@@ -32,18 +35,27 @@
             on:click={() => {
                 Workspace.close();
             }}
+            icon={XmarkSolid}
+        />
+        <Button
+            large
+            on:click={start}
+            disabled={$workspace?.server !== undefined}
+            icon={CirclePlayRegular}
+            iconColor="#34D399"
         >
-            <XmarkSolid size="14" />
-        </Button>
-        <Button large on:click={start}>Start robot code</Button>
+            Start robot code</Button
+        >
         <Button
             large
             on:click={stop}
             disabled={$workspace?.server === undefined}
+            icon={CircleStopRegular}
+            iconColor="#F87171"
         >
             Stop robot code
         </Button>
-        <Button large on:click={build}>Build (Cargo)</Button>
+        <Button large on:click={build} icon={HammerSolid}>Build (Cargo)</Button>
     </div>
     <Splitpanes class="flex-1 p-4" horizontal={true} theme="">
         <Pane minSize={20}>
