@@ -94,6 +94,11 @@
                         "name": "cargo",
                         "cmd": "cargo",
                         "args": true
+                    },
+                    {
+                        "name": "code",
+                        "cmd": "code",
+                        "args": ["--goto", { "validator": ".+" }]
                     }
                 ],
                 "open": "^file://.+",

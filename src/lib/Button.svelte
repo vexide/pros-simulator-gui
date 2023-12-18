@@ -1,7 +1,8 @@
 <script context="module" lang="ts">
     export type ButtonContext =
         | {
-              plain: boolean;
+              plain?: boolean;
+              large?: boolean;
           }
         | undefined;
     export const buttonStyle = Symbol("button-style");
@@ -11,7 +12,7 @@
     import { twMerge } from "tailwind-merge";
     import { getContext, onMount } from "svelte";
     const context = getContext<ButtonContext | undefined>(buttonStyle);
-    export let large = false;
+    export let large = context?.large ?? false;
     export let primary = false;
     export let disabled = false;
     export let plain = context?.plain ?? false;

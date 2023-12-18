@@ -1,10 +1,40 @@
 import { readonly, writable, type Writable } from "svelte/store";
 import { database, type RecentWorkspace } from "./database.ts";
 import { invoke } from "@tauri-apps/api";
-import { sep } from "@tauri-apps/api/path";
+import { join, sep } from "@tauri-apps/api/path";
+import { Terminal } from "@xterm/xterm";
+import type { Child } from "@tauri-apps/api/shell";
+import colors from "ansi-colors";
+import { spawnServer } from "./sidecar.ts";
+import { buildProject } from "./build.ts";
+import { FitAddon } from "@xterm/addon-fit";
+import { WebglAddon } from "@xterm/addon-webgl";
+import { LinkProvider } from "xterm-link-provider";
+import {
+    TerminalLinkDetectorAdapter,
+    TerminalLocalLinkDetector,
+} from "./pathDetector.ts";
+import { open } from "@tauri-apps/api/shell";
+import { openInVSCode } from "./openFile.ts";
 
-const workspaceStore: Writable<Workspace | null> = writable(null);
-export const workspace = readonly(workspaceStore);
+colors.enabled = true;
+
+export const workspace: Writable<Workspace | null> = writable(null);
+
+function mutate<Args extends any[], Ret>(
+    inner: (this: Workspace, ...args: Args) => Ret,
+): (...args: Args) => Ret | undefined {
+    return (...args: Args) => {
+        let ret: Ret | undefined;
+        workspace.update((ws) => {
+            if (ws) {
+                ret = Reflect.apply(inner, ws, args);
+            }
+            return ws;
+        });
+        return ret;
+    };
+}
 
 export class Workspace {
     static open(path: string) {
@@ -13,23 +43,27 @@ export class Workspace {
         if (name === "") {
             name = components.pop();
         }
-        const workspace = new Workspace(path, name ?? "Untitled Workspace");
-        workspaceStore.set(workspace);
+        const ws = new Workspace(path, name ?? "Untitled Workspace");
+        workspace.set(ws);
     }
 
     static openRecent(recent: RecentWorkspace) {
-        const workspace = new Workspace(recent.path, recent.name);
-        workspaceStore.set(workspace);
+        const ws = new Workspace(recent.path, recent.name);
+        workspace.set(ws);
     }
 
     static close() {
-        workspaceStore.set(null);
+        workspace.set(null);
     }
 
-    private constructor(
-        public path: string,
-        public name: string,
-    ) {}
+    static mutate(fn: (ws: Workspace) => void) {
+        workspace.update((ws) => {
+            if (ws) {
+                fn(ws);
+            }
+            return ws;
+        });
+    }
 
     static #homeDir = invoke<string | null>("get_home_dir");
 
@@ -43,6 +77,201 @@ export class Workspace {
         }
         return path;
     }
+
+    static #lineColPattern = /:(\d+):(\d+)$/;
+
+    state = new State();
+    terminal = new Terminal({
+        convertEol: true,
+        fontFamily: "ui-monospace, monospace",
+        allowTransparency: true,
+        theme: {
+            background: "#00000000",
+        },
+    });
+    #serverProcess: AbortController | undefined;
+    #buildProcess: AbortController | undefined;
+    #timer: number | undefined;
+    server: Child | undefined;
+    fitAddon = new FitAddon();
+    webglAddon = new WebglAddon();
+
+    private constructor(
+        public path: string,
+        public name: string,
+    ) {
+        this.terminal.loadAddon(this.fitAddon);
+        this.terminal.loadAddon(this.webglAddon);
+
+        this.webglAddon.onContextLoss(() => {
+            this.webglAddon.dispose();
+        });
+
+        this.terminal.registerLinkProvider(
+            new TerminalLinkDetectorAdapter(
+                new TerminalLocalLinkDetector(this.terminal),
+                async (e, link) => {
+                    console.log(link);
+                    const success = await openInVSCode(link.text);
+                    if (success) {
+                        return;
+                    }
+
+                    if (link.uri) {
+                        console.log(link.uri.href);
+                        await open(link.uri.href);
+                        return;
+                    }
+
+                    if (link.parsedLink) {
+                        const url = new URL(`file://${link.parsedLink.path}`);
+                        await open(url.href);
+                        return;
+                    }
+
+                    const url = new URL(`file://${link.text}`);
+                    await open(url.href);
+                },
+            ),
+        );
+    }
+
+    tick() {
+        this.terminal.writeln("tick");
+        this.state.elapsedSeconds += 1;
+    }
+
+    startServer() {
+        if (this.#serverProcess) {
+            return;
+        }
+
+        const { terminal } = this;
+
+        const serverProcess = new AbortController();
+        this.#serverProcess = serverProcess;
+        clearInterval(this.#timer);
+        this.state = new State();
+        terminal.writeln("Starting server...");
+        (async () => {
+            const wasmPath = await join(
+                this.path,
+                "target",
+                "wasm32-unknown-unknown",
+                "debug",
+                `${this.name}.wasm`,
+            );
+            terminal.writeln(colors.gray(`> ${wasmPath}`));
+
+            try {
+                const server = await spawnServer(wasmPath, {
+                    abort: serverProcess.signal,
+                    onExit(code) {
+                        terminal.writeln(`Process exited with code ${code}.`);
+                        Workspace.mutate((ws) => ws.afterFinish());
+                    },
+                    onStderr(data) {
+                        terminal.write(data);
+                    },
+                    onError(error) {
+                        terminal.writeln(`Error: ${error.message}`);
+                        Workspace.mutate((ws) => ws.afterFinish());
+                    },
+                    onData(data) {
+                        Workspace.mutate((ws) => ws.handleEvent(data));
+                        terminal.writeln(colors.green(JSON.stringify(data)));
+                    },
+                });
+
+                Workspace.mutate((ws) => (ws.server = server));
+            } catch (err) {
+                terminal.writeln(`Failed to start server: ${String(err)}`);
+            }
+        })();
+    }
+
+    stopServer() {
+        if (this.#serverProcess) {
+            this.#serverProcess.abort();
+        }
+        this.afterFinish();
+    }
+
+    afterFinish() {
+        this.server = undefined;
+        this.#serverProcess = undefined;
+        clearInterval(this.#timer);
+    }
+
+    handleEvent(event: unknown) {
+        if (typeof event === "string") {
+            this.#handleStringEvent(event as StringEvent);
+        } else if (typeof event === "object" && event) {
+            const variant = Object.keys(event)[0] as any;
+            const payload = Reflect.get(event, variant);
+            this.#handleObjectEvent([variant, payload]);
+        }
+    }
+
+    #handleStringEvent(name: StringEvent) {
+        switch (name) {
+            case "LcdInitialized": {
+                this.state.lcdLines = [];
+                break;
+            }
+            case "LcdShutdown": {
+                this.state.lcdLines = undefined;
+                break;
+            }
+            case "RobotCodeFinished": {
+                clearInterval(this.#timer);
+                break;
+            }
+        }
+    }
+
+    #handleObjectEvent([variant, payload]: ObjectEvent) {
+        switch (variant) {
+            case "LcdUpdated": {
+                this.state.lcdLines = payload;
+                break;
+            }
+            case "ConsoleMessage": {
+                this.terminal.writeln(payload);
+                break;
+            }
+        }
+    }
+
+    async build() {
+        this.#buildProcess?.abort();
+        this.#buildProcess = new AbortController();
+        const { terminal } = this;
+        try {
+            await buildProject(this.path, {
+                abort: this.#buildProcess.signal,
+                onStderr(data) {
+                    terminal.write(data);
+                },
+                onExit(code) {
+                    terminal.writeln(`Process exited with code ${code}.`);
+                },
+                onError(error) {
+                    terminal.writeln(`Error: ${error.message}`);
+                },
+            });
+        } catch (err) {
+            terminal.writeln(`Failed to build: ${String(err)}`);
+        }
+    }
+}
+
+type StringEvent = "LcdInitialized" | "LcdShutdown" | "RobotCodeFinished";
+type ObjectEvent = ["LcdUpdated", string[]] | ["ConsoleMessage", string];
+
+export class State {
+    lcdLines: string[] | undefined;
+    elapsedSeconds = 0;
 }
 
 workspace.subscribe((ws) => {
