@@ -17,7 +17,7 @@
     import CircleStopRegular from "svelte-awesome-icons/CircleStopRegular.svelte";
     import CirclePlayRegular from "svelte-awesome-icons/CirclePlayRegular.svelte";
     import HammerSolid from "svelte-awesome-icons/HammerSolid.svelte";
-    import Devices from "./Devices.svelte";
+    import DeviceListView from "./DeviceListView.svelte";
 
     const start = () => Workspace.mutate((ws) => ws.startServer());
     const stop = () => Workspace.mutate((ws) => ws.stopServer());
@@ -60,15 +60,15 @@
     </div>
     <Splitpanes class="flex-1 p-4" horizontal={true} theme="">
         <Pane minSize={20} class="flex gap-4">
-            <Devices />
-            <Card title="LCD Display" class="flex-1">
+            <DeviceListView />
+            <Card title="LCD Display" class="flex-1 shrink-0">
                 <LcdDisplay
                     lines={$workspace?.state.lcdLines}
                     elapsedSeconds={$workspace?.state.elapsedSeconds}
                 />
             </Card>
         </Pane>
-        <Pane minSize={25}>
+        <Pane minSize={30}>
             <Card title="Console" class="flex-1 gap-2">
                 <svelte:fragment slot="actions">
                     <Button on:click={() => $workspace?.terminal.clear()}>

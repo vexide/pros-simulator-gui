@@ -12,6 +12,12 @@
     color-scheme: light dark;
 }
 
+*,
+*::before,
+*::after {
+    @apply dark:border-white/20;
+}
+
 html,
 body {
     @apply m-0 h-full bg-transparent;

@@ -7,21 +7,29 @@
     export { className as class };
 </script>
 
-<div class="flex flex-wrap rounded-lg border bg-neutral-100 shadow-inner">
+<ul
+    class="flex rounded-lg border bg-neutral-100 shadow-inner dark:bg-neutral-900"
+>
     {#each controls as [value, label], index}
-        <button
-            type="button"
+        <li
             class={twMerge(
-                "h-7 rounded-md px-2  active:bg-white/40 active:shadow-sm active:shadow-neutral-500/60",
-                currentSelection === value &&
-                    "bg-white shadow-sm shadow-neutral-500/60",
-                index !== 0 && "border-l",
+                index !== 0 &&
+                    "flex before:block before:h-4 before:self-center before:border-l",
             )}
-            on:click={() => {
-                currentSelection = value;
-            }}
         >
-            {label}
-        </button>
+            <button
+                type="button"
+                class={twMerge(
+                    "h-7 rounded-md px-2 active:bg-white/40 active:shadow-sm active:shadow-neutral-500/60 dark:active:bg-neutral-500/40",
+                    currentSelection === value &&
+                        "bg-white shadow-sm shadow-neutral-500/60 dark:bg-neutral-500",
+                )}
+                on:click={() => {
+                    currentSelection = value;
+                }}
+            >
+                {label}
+            </button>
+        </li>
     {/each}
-</div>
+</ul>

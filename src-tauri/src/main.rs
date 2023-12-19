@@ -200,7 +200,13 @@ fn main() {
             let window = app.get_window("main").unwrap();
 
             #[cfg(target_os = "macos")]
-            apply_vibrancy(&window, NSVisualEffectMaterial::FullScreenUI, None, None).unwrap();
+            apply_vibrancy(
+                &window,
+                NSVisualEffectMaterial::WindowBackground,
+                None,
+                None,
+            )
+            .unwrap();
 
             #[cfg(target_os = "windows")]
             {
