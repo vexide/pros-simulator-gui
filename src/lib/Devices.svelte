@@ -7,6 +7,9 @@
     } from "../controllers.ts";
     import { twMerge } from "tailwind-merge";
     import { enabled } from "ansi-colors";
+    import Divider from "./Divider.svelte";
+    import Button from "./Button.svelte";
+    import SegmentedControl from "./SegmentedControl.svelte";
 
     function pairs<T>(iter: Iterable<T>): [T, T][] {
         const result: [T, T][] = [];
@@ -26,13 +29,22 @@
 
 <Card title="Devices" class="flex-1">
     {#each $controllers as controller, index (controller?.id ?? index)}
-        <Form>
+        <Form class="min-w-[30ch]">
             {#if controller}
-                <article>
-                    <h1 class="font-bold">{controller.name}</h1>
-                    <hr />
+                <article class="flex flex-col items-start gap-2">
+                    <div class="flex">
+                        <h1 class="font-bold">{controller.name}</h1>
+                    </div>
+                    <SegmentedControl
+                        controls={[
+                            ["primary", "Primary"],
+                            ["secondary", "Secondary"],
+                            ["none", "None"],
+                        ]}
+                    />
+                    <Divider />
                     <h2>Analog Inputs</h2>
-                    <div class="flex gap-4">
+                    <div class="flex gap-2">
                         {#each pairs(gamepadAnalog) as [x, y]}
                             {@const xV = controller.analog.get(x) ?? 0}
                             {@const yV = controller.analog.get(y) ?? 0}
@@ -47,21 +59,20 @@
                         {/each}
                     </div>
                     <h2>Buttons</h2>
-                    <div class="flex flex-wrap">
+                    <div class="flex flex-wrap gap-2">
                         {#each gamepadDigital as name}
                             {@const enabled =
                                 controller.digital.get(name) ?? false}
                             <div
                                 class={twMerge(
                                     "relative flex h-10 w-10 items-center justify-center rounded-full border text-sm",
-                                    enabled && "bg-blue-500",
+                                    enabled && "bg-blue-500 text-white",
                                 )}
                             >
                                 {name}
                             </div>
                         {/each}
                     </div>
-                    <br />
                 </article>
             {:else}
                 <article>

@@ -137,8 +137,7 @@
                 "height": 800,
                 "transparent": true,
                 "minWidth": 500,
-                "minHeight": 300,
-                "theme": "Dark"
+                "minHeight": 300
             }
         ]
     }

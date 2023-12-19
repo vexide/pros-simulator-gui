@@ -25,15 +25,16 @@
     let button: HTMLButtonElement;
     onMount(() => {
         if (primary) {
+            button.focus();
             const listener = (event: KeyboardEvent) => {
                 console.log(event.key);
                 if (event.key === "Enter") {
                     button.click();
                 }
             };
-            document.addEventListener("keydown", listener);
+            button.addEventListener("keydown", listener);
             return () => {
-                document.removeEventListener("keydown", listener);
+                button.removeEventListener("keydown", listener);
             };
         }
     });
