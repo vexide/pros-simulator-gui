@@ -3,7 +3,7 @@
     import type { Writable } from "svelte/store";
     import Card from "./Card.svelte";
     import Button from "./Button.svelte";
-    import { Workspace } from "../workspace.ts";
+    import { Workspace, type Message } from "../workspace.ts";
     import type { Child } from "@tauri-apps/api/shell";
     import { workspace } from "../workspace.ts";
     import { spawnServer } from "../sidecar.ts";

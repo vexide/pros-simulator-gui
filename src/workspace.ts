@@ -221,6 +221,17 @@ export class Workspace {
         clearInterval(this.#timer);
     }
 
+    async sendInput(event: Message) {
+        if (this.server) {
+            const text =
+                JSON.stringify({
+                    [event[0]]: event[1],
+                }) + "\n";
+            console.log(text);
+            await this.server.write(text);
+        }
+    }
+
     handleEvent(event: unknown) {
         if (typeof event === "string") {
             this.#handleStringEvent(event as StringEvent);
@@ -302,6 +313,9 @@ type ObjectEvent =
     | ["RobotCodeError", { message: string; backtrace: string }]
     | ["LcdUpdated", string[]]
     | ["LcdColorsUpdated", number, number];
+export type Message =
+    | ["ControllerUpdate", [unknown, unknown]]
+    | ["LcdButtonsUpdate", [boolean, boolean, boolean]];
 
 export class State {
     lcdLines: string[] | undefined;

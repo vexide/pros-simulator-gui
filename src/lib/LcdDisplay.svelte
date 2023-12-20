@@ -2,7 +2,7 @@
     import { onMount, afterUpdate } from "svelte";
     import "@fontsource/dejavu-mono/400.css";
     import "@fontsource/dejavu-sans/400.css";
-    import { workspace } from "../workspace.ts";
+    import { workspace, type Message, Workspace } from "../workspace.ts";
     import LcdButton from "./LcdButton.svelte";
 
     let container: HTMLDivElement;
@@ -10,6 +10,14 @@
 
     export let lines: string[] | undefined;
     export let elapsedSeconds: number = 0;
+
+    let presses: [boolean, boolean, boolean] = [false, false, false];
+
+    const update = (button: number, value: boolean) => {
+        presses[button] = value;
+        presses = presses;
+        Workspace.mutate((ws) => ws.sendInput(["LcdButtonsUpdate", presses]));
+    };
 
     onMount(() => {
         const observer = new ResizeObserver((entries) => {
@@ -56,9 +64,16 @@
                         "\n",
                     )}</pre>
                 <div class="flex gap-40 text-2xl">
-                    <LcdButton />
-                    <LcdButton />
-                    <LcdButton />
+                    {#each [0, 1, 2] as button}
+                        <LcdButton
+                            on:mousedown={() => {
+                                update(button, true);
+                            }}
+                            on:mouseup={() => {
+                                update(button, false);
+                            }}
+                        />
+                    {/each}
                 </div>
             </div>
         {:else}
