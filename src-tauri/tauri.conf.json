@@ -7,7 +7,7 @@
     },
     "package": {
         "productName": "PROS Simulator",
-        "version": "0.3.0"
+        "version": "0.3.1"
     },
     "tauri": {
         "allowlist": {
@@ -117,9 +117,7 @@
                 "signingIdentity": "-"
             },
             "deb": {
-                "depends": [
-                    "libudev-dev"
-                ]
+                "depends": ["libudev-dev"]
             },
             "icon": [
                 "icons/32x32.png",

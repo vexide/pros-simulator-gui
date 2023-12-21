@@ -1,6 +1,6 @@
 [package]
 name = "pros-simulator-gui"
-version = "0.3.0"
+version = "0.3.1"
 description = "A Tauri App"
 authors = ["pros-rs"]
 license = ""
