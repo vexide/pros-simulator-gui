@@ -23,3 +23,19 @@ export async function isWindows10() {
         return false;
     }
 }
+
+export function isLinux() {
+    return navigator.platform.includes("Linux");
+}
+
+export async function requiresOpaqueBackground() {
+    if (isLinux()) {
+        return true;
+    }
+
+    if (await isWindows10()) {
+        return true;
+    }
+
+    return false;
+}
