@@ -1,8 +1,10 @@
 <script lang="ts">
     import { twMerge } from "tailwind-merge";
     import { getContext, onMount, type ComponentType } from "svelte";
+    import type { Writable } from "svelte/store";
     export let controls: [string, string][];
-    export let currentSelection: string | undefined = undefined;
+    export let currentSelection: string;
+    export let onChange: (value: string) => void;
     let className = "";
     export { className as class };
 </script>
@@ -25,7 +27,7 @@
                         "bg-white shadow-sm shadow-neutral-500/60 dark:bg-neutral-500",
                 )}
                 on:click={() => {
-                    currentSelection = value;
+                    onChange(value);
                 }}
             >
                 {label}

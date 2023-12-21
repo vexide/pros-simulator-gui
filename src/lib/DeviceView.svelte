@@ -14,7 +14,9 @@
 
     export let controller: Controller | null;
     export let id: number;
-    let type: "primary" | "secondary" | "none" = "none";
+    export let type: "primary" | "secondary" | "none";
+
+    export let onTypeChange: (value: string) => void;
 
     function pairs<T>(iter: Iterable<T>): [T, T][] {
         const result: [T, T][] = [];
@@ -44,7 +46,8 @@
                     ["secondary", "Secondary"],
                     ["none", "Off"],
                 ]}
-                bind:currentSelection={type}
+                currentSelection={type}
+                onChange={onTypeChange}
             />
         </div>
         {#if controller}
