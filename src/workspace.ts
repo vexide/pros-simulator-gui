@@ -27,6 +27,7 @@ export enum Msg {
     Error,
     Progress,
     Echo,
+    Warn,
 }
 
 export class SimTerminal extends Terminal {
@@ -47,6 +48,10 @@ export class SimTerminal extends Terminal {
             }
             case Msg.Echo: {
                 text = colors.gray(`$ ${message}`);
+                break;
+            }
+            case Msg.Warn: {
+                text = colors.yellow(message);
                 break;
             }
         }
@@ -227,7 +232,6 @@ export class Workspace {
                 JSON.stringify({
                     [event[0]]: event[1],
                 }) + "\n";
-            console.log(text);
             await this.server.write(text);
         }
     }
@@ -273,6 +277,11 @@ export class Workspace {
             }
             case "ConsoleMessage": {
                 this.terminal.writeln(payload);
+                break;
+            }
+
+            case "Warning": {
+                this.terminal.log(payload, Msg.Error);
                 break;
             }
         }
