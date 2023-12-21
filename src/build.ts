@@ -25,6 +25,7 @@ export function buildProject(
         "--target",
         "wasm32-unknown-unknown",
         "-Zbuild-std=std,panic_abort",
+        "--config=build.rustflags=['-Ctarget-feature=+atomics,+bulk-memory,+mutable-globals', '-Clink-arg=--shared-memory', '-Clink-arg=--export-table']",
     ];
     opts.onStderr?.(gray("> cargo " + args.join(" ") + "\n"));
     const command = new Command("cargo", args, {
