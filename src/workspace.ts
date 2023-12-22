@@ -256,7 +256,10 @@ export class Workspace {
         switch (name) {
             case "RobotCodeStarting": {
                 this.terminal.log("Robot code running", Msg.Progress);
-                this.#timer = setInterval(() => this.tick(), 1000);
+                this.#timer = setInterval(
+                    () => Workspace.mutate((ws) => ws.tick()),
+                    1000,
+                );
                 break;
             }
             case "LcdInitialized": {
