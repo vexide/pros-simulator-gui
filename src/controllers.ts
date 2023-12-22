@@ -2,6 +2,11 @@ import { emit, listen } from "@tauri-apps/api/event";
 import { invoke } from "@tauri-apps/api/tauri";
 import { readable, readonly, writable } from "svelte/store";
 import type { ArrayValues } from "type-fest";
+import type {
+    ControllerStateMessage,
+    DigitalControllerState,
+    AnalogControllerState,
+} from "./sidecar.ts";
 
 export const gamepadAnalog = ["LeftX", "LeftY", "RightX", "RightY"] as const;
 /**
@@ -76,6 +81,41 @@ export class Controller {
                 );
             }
         }
+    }
+
+    /** Converts axis representation as float (-1, 1, 0.123) to int (-127, 127, 16) */
+    static #analogRepOfAxis(value: number): number {
+        return Math.round(value * 127);
+    }
+
+    toMessage(): ControllerStateMessage {
+        const digital: DigitalControllerState = {
+            l1: this.digital.get("L1") ?? false,
+            l2: this.digital.get("L2") ?? false,
+            r1: this.digital.get("R1") ?? false,
+            r2: this.digital.get("R2") ?? false,
+            up: this.digital.get("Up") ?? false,
+            down: this.digital.get("Down") ?? false,
+            left: this.digital.get("Left") ?? false,
+            right: this.digital.get("Right") ?? false,
+            x: this.digital.get("X") ?? false,
+            b: this.digital.get("B") ?? false,
+            y: this.digital.get("Y") ?? false,
+            a: this.digital.get("A") ?? false,
+        };
+
+        const analog: AnalogControllerState = {
+            left_x: Controller.#analogRepOfAxis(this.analog.get("LeftX") ?? 0),
+            left_y: Controller.#analogRepOfAxis(this.analog.get("LeftY") ?? 0),
+            right_x: Controller.#analogRepOfAxis(
+                this.analog.get("RightX") ?? 0,
+            ),
+            right_y: Controller.#analogRepOfAxis(
+                this.analog.get("RightY") ?? 0,
+            ),
+        };
+
+        return { digital, analog };
     }
 }
 

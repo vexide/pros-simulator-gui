@@ -5,7 +5,12 @@ import { join, sep } from "@tauri-apps/api/path";
 import { Terminal } from "@xterm/xterm";
 import type { Child } from "@tauri-apps/api/shell";
 import colors from "ansi-colors";
-import { spawnServer } from "./sidecar.ts";
+import {
+    spawnServer,
+    type ObjectEvent,
+    type StringEvent,
+    type Message,
+} from "./sidecar.ts";
 import { buildProject } from "./build.ts";
 import { FitAddon } from "@xterm/addon-fit";
 import { WebglAddon } from "@xterm/addon-webgl";
@@ -232,6 +237,7 @@ export class Workspace {
                 JSON.stringify({
                     [event[0]]: event[1],
                 }) + "\n";
+            this.terminal.write(text);
             await this.server.write(text);
         }
     }
@@ -309,22 +315,6 @@ export class Workspace {
         }
     }
 }
-
-type StringEvent =
-    | "RobotCodeLoading"
-    | "RobotCodeStarting"
-    | "RobotCodeFinished"
-    | "LcdInitialized"
-    | "LcdShutdown";
-type ObjectEvent =
-    | ["Warning", string]
-    | ["ConsoleMessage", string]
-    | ["RobotCodeError", { message: string; backtrace: string }]
-    | ["LcdUpdated", string[]]
-    | ["LcdColorsUpdated", number, number];
-export type Message =
-    | ["ControllerUpdate", [unknown, unknown]]
-    | ["LcdButtonsUpdate", [boolean, boolean, boolean]];
 
 export class State {
     lcdLines: string[] | undefined;

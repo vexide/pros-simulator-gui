@@ -131,3 +131,49 @@ export async function appInstallStatus() {
     console.log(status);
     return status;
 }
+
+export type StringEvent =
+    | "RobotCodeLoading"
+    | "RobotCodeStarting"
+    | "RobotCodeFinished"
+    | "LcdInitialized"
+    | "LcdShutdown";
+export type ObjectEvent =
+    | ["Warning", string]
+    | ["ConsoleMessage", string]
+    | ["RobotCodeError", { message: string; backtrace: string }]
+    | ["LcdUpdated", string[]]
+    | ["LcdColorsUpdated", number, number];
+export type Message =
+    | [
+          "ControllerUpdate",
+          [ControllerStateMessage | null, ControllerStateMessage | null],
+      ]
+    | ["LcdButtonsUpdate", [boolean, boolean, boolean]];
+
+export interface ControllerStateMessage {
+    digital: DigitalControllerState;
+    analog: AnalogControllerState;
+}
+
+export interface DigitalControllerState {
+    l1: boolean;
+    l2: boolean;
+    r1: boolean;
+    r2: boolean;
+    up: boolean;
+    down: boolean;
+    left: boolean;
+    right: boolean;
+    x: boolean;
+    b: boolean;
+    y: boolean;
+    a: boolean;
+}
+
+export interface AnalogControllerState {
+    left_x: number;
+    left_y: number;
+    right_x: number;
+    right_y: number;
+}

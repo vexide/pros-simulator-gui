@@ -12,6 +12,8 @@
     import SegmentedControl from "./SegmentedControl.svelte";
     import DeviceView from "./DeviceView.svelte";
     import { writable } from "svelte/store";
+    import type { ControllerStateMessage } from "../sidecar.ts";
+    import { Workspace } from "../workspace.ts";
 
     let controllerTypes: ("primary" | "secondary" | "none")[] = Array.from(
         { length: $controllers.length },
@@ -25,6 +27,25 @@
         }
         controllerTypes[index] = type as any;
         controllerTypes = controllerTypes;
+    }
+
+    function update(
+        message: [ControllerStateMessage | null, ControllerStateMessage | null],
+    ) {
+        Workspace.mutate((ws) => {
+            ws.sendInput(["ControllerUpdate", message]);
+        });
+    }
+
+    $: {
+        let primaryIndex = controllerTypes.findIndex((t) => t === "primary");
+        let secondaryIndex = controllerTypes.findIndex(
+            (t) => t === "secondary",
+        );
+        let primary = primaryIndex === -1 ? null : $controllers[primaryIndex];
+        let secondary =
+            secondaryIndex === -1 ? null : $controllers[secondaryIndex];
+        update([primary?.toMessage() ?? null, secondary?.toMessage() ?? null]);
     }
 </script>
 

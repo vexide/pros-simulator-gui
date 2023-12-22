@@ -58,10 +58,10 @@ impl TryFrom<Button> for GamepadDigital {
             Button::DPadDown => Ok(Self::Down),
             Button::DPadLeft => Ok(Self::Left),
             Button::DPadRight => Ok(Self::Right),
-            Button::South => Ok(Self::X),
-            Button::East => Ok(Self::B),
+            Button::North => Ok(Self::X),
+            Button::South => Ok(Self::B),
             Button::West => Ok(Self::Y),
-            Button::North => Ok(Self::A),
+            Button::East => Ok(Self::A),
             _ => Err(()),
         }
     }
