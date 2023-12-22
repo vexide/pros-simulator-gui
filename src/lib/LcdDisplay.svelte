@@ -2,7 +2,7 @@
     import { onMount, afterUpdate } from "svelte";
     import "@fontsource/dejavu-mono/400.css";
     import "@fontsource/dejavu-sans/400.css";
-    import { workspace, type Message, Workspace } from "../workspace.ts";
+    import { workspace, Workspace } from "../workspace.ts";
     import LcdButton from "./LcdButton.svelte";
 
     let container: HTMLDivElement;

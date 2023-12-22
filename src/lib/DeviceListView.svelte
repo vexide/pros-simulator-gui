@@ -29,12 +29,30 @@
         controllerTypes = controllerTypes;
     }
 
+    let lastUpdate = 0;
+    let updateTimeout: number | undefined;
+    let latestMessage: [
+        ControllerStateMessage | null,
+        ControllerStateMessage | null,
+    ];
+
     function update(
         message: [ControllerStateMessage | null, ControllerStateMessage | null],
     ) {
-        Workspace.mutate((ws) => {
-            ws.sendInput(["ControllerUpdate", message]);
-        });
+        const now = Date.now();
+        clearTimeout(updateTimeout);
+        if (now - lastUpdate >= 20) {
+            Workspace.mutate((ws) => {
+                ws.sendInput(["ControllerUpdate", message]);
+            });
+        } else {
+            latestMessage = message;
+            updateTimeout = setTimeout(() => {
+                Workspace.mutate((ws) => {
+                    ws.sendInput(["ControllerUpdate", latestMessage]);
+                });
+            }, 20);
+        }
     }
 
     $: {
