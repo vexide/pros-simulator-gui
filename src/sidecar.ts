@@ -128,6 +128,23 @@ export async function appInstallStatus() {
         dir: BaseDirectory.AppLocalData,
     });
     status.set("Runtime", serverExists);
+    if (serverExists) {
+        try {
+            let res = await fetch(
+                "https://api.github.com/repos/pros-rs/pros-simulator/releases/latest",
+            );
+            if (!res.ok) throw new Error("Failed to check for updates");
+            let json = await res.json();
+            let latestVersion = json.tag_name;
+            const command = new Command((await env).binaryName, ["--version"]);
+            let output = await command.execute();
+            let currentVersion = output.stdout.trim().split(" ")[1];
+            if ("v" + currentVersion !== latestVersion)
+                status.set("Runtime", false);
+        } catch (error) {
+            console.error("Failed to check for updates:", error);
+        }
+    }
     console.log(status);
     return status;
 }
