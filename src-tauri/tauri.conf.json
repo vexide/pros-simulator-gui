@@ -78,12 +78,12 @@
                     {
                         "name": "pros-simulator-server",
                         "cmd": "$APPLOCALDATA/pros-simulator-server",
-                        "args": ["--stdio", { "validator": ".+" }]
+                        "args": true
                     },
                     {
                         "name": "pros-simulator-server.exe",
                         "cmd": "$APPLOCALDATA/pros-simulator-server.exe",
-                        "args": ["--stdio", { "validator": ".+" }]
+                        "args": true
                     },
                     {
                         "name": "chmod",
