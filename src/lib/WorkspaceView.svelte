@@ -58,7 +58,14 @@
         </Button>
         <Button large on:click={build} icon={HammerSolid}>Build (Cargo)</Button>
     </div>
-    <Splitpanes class="flex-1 p-4" horizontal={true} theme="">
+    <Splitpanes
+        class="flex-1 p-4"
+        horizontal={true}
+        theme=""
+        on:resized={() => {
+            $workspace?.fitAddon.fit();
+        }}
+    >
         <Pane minSize={20} class="flex gap-4">
             <DeviceListView />
             <Card title="LCD Display" class="flex-1 shrink-0">

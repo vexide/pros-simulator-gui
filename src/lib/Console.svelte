@@ -5,33 +5,36 @@
 
     let term: HTMLDivElement | undefined;
 
-    const resize = new ResizeObserver((entries) => {
-        for (const entry of entries) {
-            if (entry.target === term) {
-                $workspace?.fitAddon.fit();
-                console.log("fit");
-            }
-        }
-    });
+    // const resize = new ResizeObserver((entries) => {
+    //     for (const entry of entries) {
+    //         if (entry.target === term) {
+    //             $workspace?.fitAddon.fit();
+    //             console.log("fit");
+    //         }
+    //     }
+    // });
     onMount(() => {
         $workspace?.terminal.open(term!);
         $workspace?.fitAddon.fit();
-        resize.observe(term!);
+        setTimeout(() => $workspace?.fitAddon.fit());
+        // resize.observe(term!);
         const focused = document.activeElement;
         $workspace?.terminal.focus();
         if (focused instanceof HTMLElement) {
             focused.focus();
         }
         return () => {
-            resize.disconnect();
-            $workspace?.terminal.dispose();
+            // resize.disconnect();
+            // $workspace?.terminal.dispose();
         };
     });
 </script>
 
-<div class="relative h-full w-full">
+<div
+    class="flex h-full w-full flex-col overflow-hidden rounded-lg bg-neutral-900 p-2 dark:bg-transparent"
+>
     <div
-        class="absolute inset-0 overflow-hidden rounded-md bg-neutral-900 p-2 dark:bg-transparent"
+        class="flex flex-1 flex-col justify-end overflow-hidden"
         bind:this={term}
-    />
+    ></div>
 </div>
