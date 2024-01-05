@@ -7,7 +7,7 @@
     },
     "package": {
         "productName": "PROS Simulator",
-        "version": "0.2.0"
+        "version": "0.4.0"
     },
     "tauri": {
         "allowlist": {
@@ -42,7 +42,7 @@
                 "setResizable": false,
                 "setSize": false,
                 "setSkipTaskbar": false,
-                "setTitle": false,
+                "setTitle": true,
                 "show": false,
                 "startDragging": true,
                 "unmaximize": true,
@@ -78,12 +78,12 @@
                     {
                         "name": "pros-simulator-server",
                         "cmd": "$APPLOCALDATA/pros-simulator-server",
-                        "args": ["--stdio", { "validator": ".+" }]
+                        "args": true
                     },
                     {
                         "name": "pros-simulator-server.exe",
                         "cmd": "$APPLOCALDATA/pros-simulator-server.exe",
-                        "args": ["--stdio", { "validator": ".+" }]
+                        "args": true
                     },
                     {
                         "name": "chmod",
@@ -94,6 +94,11 @@
                         "name": "cargo",
                         "cmd": "cargo",
                         "args": true
+                    },
+                    {
+                        "name": "code",
+                        "cmd": "code",
+                        "args": ["--goto", { "validator": ".+" }]
                     }
                 ],
                 "open": "^file://.+",
@@ -110,6 +115,9 @@
             "identifier": "rs.pros.simulator",
             "macOS": {
                 "signingIdentity": "-"
+            },
+            "deb": {
+                "depends": ["libudev-dev"]
             },
             "icon": [
                 "icons/32x32.png",
@@ -128,12 +136,11 @@
                 "fullscreen": false,
                 "resizable": true,
                 "title": "PROS Simulator",
-                "width": 800,
-                "height": 600,
+                "width": 1100,
+                "height": 800,
                 "transparent": true,
                 "minWidth": 500,
-                "minHeight": 300,
-                "theme": "Dark"
+                "minHeight": 300
             }
         ]
     }

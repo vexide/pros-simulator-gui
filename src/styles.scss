@@ -12,6 +12,12 @@
     color-scheme: light dark;
 }
 
+*,
+*::before,
+*::after {
+    @apply dark:border-white/20;
+}
+
 html,
 body {
     @apply m-0 h-full bg-transparent;
@@ -68,6 +74,6 @@ progress:indeterminate::-webkit-progress-value {
     color-scheme: dark;
 }
 
-.windows10 {
+.opaque {
     @apply bg-neutral-300 dark:bg-stone-900;
 }

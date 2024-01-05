@@ -1,6 +1,6 @@
 <script lang="ts" context="module">
-    import { isWindows10 } from "./detectWindows10.js";
-    const windows10 = isWindows10();
+    import { requiresOpaqueBackground } from "./detectTransparencySupport.js";
+    const opaque = requiresOpaqueBackground();
 </script>
 
 <script lang="ts">
@@ -46,14 +46,14 @@
     }
 
     onMount(() => {
-        windows10.then((isWindows10) => {
-            if (isWindows10) {
-                document.body.classList.add("windows10");
+        opaque.then((opaque) => {
+            if (opaque) {
+                document.body.classList.add("opaque");
             }
         });
 
         return () => {
-            document.body.classList.remove("windows10");
+            document.body.classList.remove("opaque");
         };
     });
 </script>
