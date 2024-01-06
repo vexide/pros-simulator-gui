@@ -2,6 +2,7 @@ import { readonly, writable, type Writable } from "svelte/store";
 import { database, type RecentWorkspace } from "./database.ts";
 import { invoke } from "@tauri-apps/api";
 import { join, sep } from "@tauri-apps/api/path";
+import { readDir } from "@tauri-apps/api/fs";
 import { Terminal } from "@xterm/xterm";
 import type { Child } from "@tauri-apps/api/shell";
 import colors from "ansi-colors";
@@ -22,10 +23,17 @@ import {
 import { open } from "@tauri-apps/api/shell";
 import { openInVSCode } from "./openFile.ts";
 import { title } from "./window.ts";
+import cliArgs from "./cli.ts";
 
 colors.enabled = true;
 
 export const workspace: Writable<Workspace | null> = writable(null);
+
+cliArgs().then((args) => {
+    if (args.workspace) {
+        Workspace.open(args.workspace);
+    }
+});
 
 export enum Msg {
     Info,
@@ -179,13 +187,17 @@ export class Workspace {
         this.state = new State();
         terminal.log("Starting server", Msg.Progress);
         (async () => {
-            const wasmPath = await join(
-                this.path,
-                "target",
-                "wasm32-unknown-unknown",
-                "debug",
-                `${this.name}.wasm`,
-            );
+            const args = await cliArgs();
+            let wasmPath = args.code;
+            if (!wasmPath) {
+                wasmPath = await join(
+                    this.path,
+                    "target",
+                    "wasm32-unknown-unknown",
+                    "debug",
+                    `${this.name}.wasm`,
+                );
+            }
             terminal.log(wasmPath, Msg.Echo);
 
             try {

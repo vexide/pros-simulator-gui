@@ -10,6 +10,23 @@
         "version": "0.4.0"
     },
     "tauri": {
+        "cli": {
+            "description": "GUI application for simulating VEX V5 robots without real hardware.",
+            "args": [
+                {
+                    "name": "code",
+                    "description": "Path to the user's robot code (*.wasm).",
+                    "takesValue": true
+                },
+                {
+                    "name": "workspace",
+                    "description": "Path to the workspace to open on startup.",
+                    "index": 1,
+                    "takesValue": true,
+                    "required": false
+                }
+            ]
+        },
         "allowlist": {
             "all": false,
             "window": {

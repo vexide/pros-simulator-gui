@@ -1,12 +1,12 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-use std::time::Duration;
+use std::{fs, path::Path, process::exit, time::Duration};
 
 use gilrs::{Axis, Button, Event, EventType, Gilrs};
-use serde::Serialize;
-use serde_json::json;
-use tauri::{async_runtime::Mutex, AppHandle, Manager, Runtime, Window};
+use serde::{Deserialize, Serialize};
+use serde_json::{json, Value};
+use tauri::{async_runtime::Mutex, App, AppHandle, Manager, Runtime, Window};
 use tauri_plugin_sql::{Migration, MigrationKind};
 use window_vibrancy::{apply_blur, apply_mica, apply_vibrancy, NSVisualEffectMaterial};
 
@@ -23,6 +23,18 @@ fn get_home_dir() -> Option<String> {
 #[tauri::command]
 fn get_target() -> &'static str {
     env!("RUSTC_TARGET")
+}
+
+#[derive(Serialize, Deserialize, Default, Clone)]
+struct Args {
+    workspace: Option<String>,
+    code: Option<String>,
+}
+
+#[tauri::command]
+fn get_args<R: Runtime>(app: AppHandle<R>) -> Args {
+    let args = app.state::<Args>();
+    (*args).clone()
 }
 
 struct GamepadInput {
@@ -195,6 +207,47 @@ fn main() {
             method: Mutex::new(Gilrs::new().unwrap()),
         })
         .setup(|app| {
+            match app.get_cli_matches() {
+                Ok(matches) => {
+                    let mut args = Args::default();
+                    if let Some(help) = matches.args.get("help") {
+                        eprintln!("{}", help.value.as_str().unwrap());
+                        exit(1);
+                    }
+                    if matches.args.get("version").is_some() {
+                        println!("{}", app.package_info().version);
+                        exit(0);
+                    }
+                    if let Some(ws) = matches.args.get("workspace").and_then(|m| m.value.as_str()) {
+                        let path = Path::new(ws)
+                            .canonicalize()
+                            .expect("Failed to open workspace");
+                        if !path.is_dir() {
+                            eprintln!("Workspace not a directory: {ws}");
+                            exit(1);
+                        }
+                        app.fs_scope().allow_directory(&path, true).unwrap();
+                        args.workspace = Some(format!("{}", path.display()));
+                    }
+                    if let Some(user_code) = matches.args.get("code").and_then(|m| m.value.as_str())
+                    {
+                        if let Ok(path) = Path::new(user_code).canonicalize() {
+                            app.fs_scope().allow_file(&path).unwrap();
+                            args.code = Some(format!("{}", path.display()));
+                        } else {
+                            eprintln!("Cannot open robot code: {user_code}");
+                            exit(1);
+                        }
+                    }
+
+                    app.manage(args);
+                }
+                Err(e) => {
+                    eprintln!("{e}");
+                    exit(1);
+                }
+            }
+
             broadcast_gamepad(app.app_handle());
 
             let window = app.get_window("main").unwrap();
@@ -219,7 +272,8 @@ fn main() {
         .invoke_handler(tauri::generate_handler![
             get_home_dir,
             get_target,
-            connect_all_gamepads
+            connect_all_gamepads,
+            get_args,
         ])
         .plugin(tauri_plugin_persisted_scope::init())
         .plugin(db)

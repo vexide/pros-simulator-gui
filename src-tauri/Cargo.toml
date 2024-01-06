@@ -27,6 +27,7 @@ tauri = { version = "1.5", features = [
     "window-maximize",
     "dialog-open",
     "macos-private-api",
+    "cli",
 ] }
 window-vibrancy = "0.4.3"
 tauri-plugin-persisted-scope = "0.1.3"
