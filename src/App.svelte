@@ -47,13 +47,13 @@
 
     onMount(() => {
         opaque.then((opaque) => {
-            if (opaque) {
-                document.body.classList.add("opaque");
+            if (!opaque) {
+                document.body.classList.remove("opaque");
             }
         });
 
         return () => {
-            document.body.classList.remove("opaque");
+            document.body.classList.add("opaque");
         };
     });
 </script>
