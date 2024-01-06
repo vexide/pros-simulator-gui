@@ -60,13 +60,13 @@
 
 <div class="flex h-full flex-col overflow-hidden text-black dark:text-white">
     {#await installInfo then components}
+        <Modal open={installModalOpen}>
+            <FirstTimeSetup {components} />
+        </Modal>
         {#if $workspace}
             <WorkspaceView />
         {:else}
             <div class="flex flex-1 items-center justify-center gap-4 p-4">
-                <Modal open={installModalOpen}>
-                    <FirstTimeSetup {components} />
-                </Modal>
                 <Card title="Get Started" titleCentered>
                     <div class="grid grid-cols-2 gap-4 self-stretch">
                         <Button on:click={pickWorkspace} class="flex-1"

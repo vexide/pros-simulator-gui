@@ -5,27 +5,24 @@
 
     let term: HTMLDivElement | undefined;
 
-    // const resize = new ResizeObserver((entries) => {
-    //     for (const entry of entries) {
-    //         if (entry.target === term) {
-    //             $workspace?.fitAddon.fit();
-    //             console.log("fit");
-    //         }
-    //     }
-    // });
     onMount(() => {
         $workspace?.terminal.open(term!);
         $workspace?.fitAddon.fit();
         setTimeout(() => $workspace?.fitAddon.fit());
-        // resize.observe(term!);
+
+        const resizeHandler = () => {
+            $workspace?.fitAddon.fit();
+        };
+        window.addEventListener("resize", resizeHandler);
+
         const focused = document.activeElement;
         $workspace?.terminal.focus();
         if (focused instanceof HTMLElement) {
             focused.focus();
         }
         return () => {
-            // resize.disconnect();
-            // $workspace?.terminal.dispose();
+            window.removeEventListener("resize", resizeHandler);
+            $workspace?.terminal.dispose();
         };
     });
 </script>
