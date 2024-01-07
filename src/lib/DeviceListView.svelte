@@ -68,12 +68,16 @@
 </script>
 
 <Card title="Devices" class="min-w-[35ch]">
-    {#each $controllers as controller, index (index)}
-        <DeviceView
-            {controller}
-            id={index}
-            type={controllerTypes[index]}
-            onTypeChange={(type) => setType(index, type)}
-        />
-    {/each}
+    <ul class="overflow-y-scroll">
+        {#each $controllers as controller, index (index)}
+            <li class="mr-2">
+                <DeviceView
+                    {controller}
+                    id={index}
+                    type={controllerTypes[index]}
+                    onTypeChange={(type) => setType(index, type)}
+                />
+            </li>
+        {/each}
+    </ul>
 </Card>

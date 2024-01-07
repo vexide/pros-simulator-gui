@@ -26,7 +26,7 @@
     onMount(() => stop);
 </script>
 
-<div class="flex flex-1 flex-col">
+<div class="flex flex-1 flex-col overflow-clip">
     <div class="flex gap-4 self-stretch p-4 pb-0">
         <Button
             class="flex items-center justify-center self-stretch p-2.5"
@@ -59,7 +59,7 @@
         <Button large on:click={build} icon={HammerSolid}>Build (Cargo)</Button>
     </div>
     <Splitpanes
-        class="flex-1 p-4"
+        class="flex-1 overflow-clip p-4"
         horizontal={true}
         theme=""
         on:resized={() => {

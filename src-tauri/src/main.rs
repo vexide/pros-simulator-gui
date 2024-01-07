@@ -1,13 +1,13 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-use std::{fs, path::Path, process::exit, time::Duration};
+use std::{path::Path, process::exit, time::Duration};
 
 use gilrs::{Axis, Button, Event, EventType, Gilrs};
 use serde::{Deserialize, Serialize};
-use serde_json::{json, Value};
-use tauri::{async_runtime::Mutex, App, AppHandle, Manager, Runtime, Window};
+use tauri::{async_runtime::Mutex, AppHandle, Manager, Menu, MenuEntry, Runtime, Submenu};
 use tauri_plugin_sql::{Migration, MigrationKind};
+#[allow(unused_imports)]
 use window_vibrancy::{apply_blur, apply_mica, apply_vibrancy, NSVisualEffectMaterial};
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
@@ -122,7 +122,7 @@ fn broadcast_gamepad<R: Runtime>(app: AppHandle<R>) {
         let input = app.state::<GamepadInput>();
         loop {
             let mut gilrs = input.method.blocking_lock();
-            while let Some(Event { id, event, time }) =
+            while let Some(Event { id, event, .. }) =
                 gilrs.next_event_blocking(Some(Duration::from_millis(1000 / 60)))
             {
                 let update = match event {

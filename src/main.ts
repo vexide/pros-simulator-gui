@@ -1,3 +1,4 @@
+import "./dark-mode.ts";
 import "./styles.scss";
 import App from "./App.svelte";
 import { getMatches } from "@tauri-apps/api/cli";
