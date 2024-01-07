@@ -12,6 +12,7 @@
     import SegmentedControl from "./SegmentedControl.svelte";
     import DeviceView from "./DeviceView.svelte";
     import { writable } from "svelte/store";
+    import TriangleExclamationSolid from "svelte-awesome-icons/TriangleExclamationSolid.svelte";
     import type { ControllerStateMessage } from "../sidecar.ts";
     import { Workspace } from "../workspace.ts";
 
@@ -65,11 +66,19 @@
             secondaryIndex === -1 ? null : $controllers[secondaryIndex];
         update([primary?.toMessage() ?? null, secondary?.toMessage() ?? null]);
     }
+
+    $: filteredControllers = $controllers.filter((x) => x !== null);
 </script>
 
 <Card title="Devices" class="min-w-[35ch]">
+    <p slot="actions" class="flex items-center gap-1 text-orange-500">
+        {#if filteredControllers.length === 0 && $controllers.length > 0}
+            <TriangleExclamationSolid size={12} />
+            Controller Disconnected
+        {/if}
+    </p>
     <ul class="overflow-y-scroll">
-        {#each $controllers as controller, index (index)}
+        {#each filteredControllers.filter((x) => x !== null) as controller, index (index)}
             <li class="mr-2">
                 <DeviceView
                     {controller}
@@ -78,6 +87,10 @@
                     onTypeChange={(type) => setType(index, type)}
                 />
             </li>
+        {:else}
+            <p class="secondary">
+                Connect a wired or Bluetooth controller to configure.
+            </p>
         {/each}
     </ul>
 </Card>
