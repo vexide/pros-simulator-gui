@@ -2,6 +2,7 @@
     import Card from "./Card.svelte";
     import Form from "./Form.svelte";
     import controllers, {
+        Controller,
         gamepadAnalog,
         gamepadDigital,
     } from "../controllers.ts";
@@ -22,8 +23,14 @@
 
     export const controllerConnected = derived(
         [controllers, controllerTypes],
-        ([controllers, controllerTypes]) =>
-            controllers.some((_, i) => controllerTypes[i] !== "none"),
+        ([controllers, controllerTypes]) => {
+            return controllers.some(
+                (c) =>
+                    c &&
+                    controllerTypes[c.id] &&
+                    controllerTypes[c.id] !== "none",
+            );
+        },
     );
 
     function setType(index: number, type: string) {
@@ -72,7 +79,9 @@
         update([primary?.toMessage() ?? null, secondary?.toMessage() ?? null]);
     }
 
-    $: filteredControllers = $controllers.filter((x) => x !== null);
+    $: filteredControllers = $controllers.filter<Controller>(
+        (x): x is Controller => x !== null,
+    );
 </script>
 
 <Card title="Devices" class="min-w-[35ch]">
@@ -83,13 +92,13 @@
         {/if}
     </p>
     <ul class="overflow-y-scroll">
-        {#each filteredControllers.filter((x) => x !== null) as controller, index (index)}
+        {#each filteredControllers as controller, _ (controller.id)}
             <li class="mr-2">
                 <DeviceView
                     {controller}
-                    id={index}
-                    type={$controllerTypes[index]}
-                    onTypeChange={(type) => setType(index, type)}
+                    id={controller.id}
+                    type={$controllerTypes[controller.id] ?? "none"}
+                    onTypeChange={(type) => setType(controller.id, type)}
                 />
             </li>
         {:else}

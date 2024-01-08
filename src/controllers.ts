@@ -122,7 +122,6 @@ export class Controller {
 const controllers = writable<(Controller | null)[]>([]);
 
 listen<GamepadEvent>("gamepad", ({ payload }) => {
-    console.log(payload);
     controllers.update((state) => {
         if (payload.update === "Disconnected") {
             state[payload.id] = null;
