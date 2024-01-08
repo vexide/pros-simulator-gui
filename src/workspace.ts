@@ -249,7 +249,6 @@ export class Workspace {
                 JSON.stringify({
                     [event[0]]: event[1],
                 }) + "\n";
-            this.terminal.write(text);
             await this.server.write(text);
         }
     }

@@ -11,23 +11,28 @@
     import Button from "./Button.svelte";
     import SegmentedControl from "./SegmentedControl.svelte";
     import DeviceView from "./DeviceView.svelte";
-    import { writable } from "svelte/store";
+    import { writable, derived } from "svelte/store";
     import TriangleExclamationSolid from "svelte-awesome-icons/TriangleExclamationSolid.svelte";
     import type { ControllerStateMessage } from "../sidecar.ts";
     import { Workspace } from "../workspace.ts";
 
-    let controllerTypes: ("primary" | "secondary" | "none")[] = Array.from(
-        { length: $controllers.length },
-        () => "none",
+    const controllerTypes = writable<("primary" | "secondary" | "none")[]>(
+        Array.from({ length: $controllers.length }, () => "none"),
+    );
+
+    export const controllerConnected = derived(
+        [controllers, controllerTypes],
+        ([controllers, controllerTypes]) =>
+            controllers.some((_, i) => controllerTypes[i] !== "none"),
     );
 
     function setType(index: number, type: string) {
-        let old = controllerTypes.findIndex((t) => t === type);
+        let old = $controllerTypes.findIndex((t) => t === type);
         if (old !== -1) {
-            controllerTypes[old] = "none";
+            $controllerTypes[old] = "none";
         }
-        controllerTypes[index] = type as any;
-        controllerTypes = controllerTypes;
+        $controllerTypes[index] = type as any;
+        controllerTypes.set($controllerTypes);
     }
 
     let lastUpdate = 0;
@@ -57,8 +62,8 @@
     }
 
     $: {
-        let primaryIndex = controllerTypes.findIndex((t) => t === "primary");
-        let secondaryIndex = controllerTypes.findIndex(
+        let primaryIndex = $controllerTypes.findIndex((t) => t === "primary");
+        let secondaryIndex = $controllerTypes.findIndex(
             (t) => t === "secondary",
         );
         let primary = primaryIndex === -1 ? null : $controllers[primaryIndex];
@@ -83,7 +88,7 @@
                 <DeviceView
                     {controller}
                     id={index}
-                    type={controllerTypes[index]}
+                    type={$controllerTypes[index]}
                     onTypeChange={(type) => setType(index, type)}
                 />
             </li>

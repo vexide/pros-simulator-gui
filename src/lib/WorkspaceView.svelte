@@ -18,6 +18,9 @@
     import CirclePlayRegular from "svelte-awesome-icons/CirclePlayRegular.svelte";
     import HammerSolid from "svelte-awesome-icons/HammerSolid.svelte";
     import DeviceListView from "./DeviceListView.svelte";
+    import type { Readable } from "svelte/motion";
+
+    let controllerConnected: Readable<boolean>;
 
     const start = () => Workspace.mutate((ws) => ws.startServer());
     const stop = () => Workspace.mutate((ws) => ws.stopServer());
@@ -67,9 +70,10 @@
         }}
     >
         <Pane minSize={20} class="flex gap-4">
-            <DeviceListView />
+            <DeviceListView bind:controllerConnected />
             <Card title="LCD Display" class="flex-1 shrink-0">
                 <LcdDisplay
+                    controllerConnected={$controllerConnected}
                     lines={$workspace?.state.lcdLines}
                     elapsedSeconds={$workspace?.state.elapsedSeconds}
                 />

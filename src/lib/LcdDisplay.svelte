@@ -2,14 +2,18 @@
     import { onMount, afterUpdate } from "svelte";
     import "@fontsource/dejavu-mono/400.css";
     import "@fontsource/dejavu-sans/400.css";
+    import "@fontsource/dejavu-sans/700.css";
     import { workspace, Workspace } from "../workspace.ts";
     import LcdButton from "./LcdButton.svelte";
+    import LaptopCodeSolid from "svelte-awesome-icons/LaptopCodeSolid.svelte";
+    import Gamepad from "svelte-lucide/Gamepad2.svelte";
 
     let container: HTMLDivElement;
     let lcd: HTMLDivElement;
 
     export let lines: string[] | undefined;
-    export let elapsedSeconds: number = 0;
+    export let elapsedSeconds = 0;
+    export let controllerConnected: boolean;
 
     let presses: [boolean, boolean, boolean] = [false, false, false];
 
@@ -35,22 +39,55 @@
 
 <div class="relative flex-1 self-center" bind:this={container}>
     <div
-        class="absolute left-0 top-0 flex h-[486px] w-[864px] origin-top-left flex-col rounded-3xl bg-[#00aad6] font-lcd-sans text-5xl font-bold text-black"
+        class="absolute left-0 top-0 flex h-[486px] w-[864px] origin-top-left flex-col overflow-clip rounded-3xl bg-[#00aad6] font-lcd-sans text-5xl text-black"
         bind:this={lcd}
     >
         <div
-            class="grid h-[4.25rem] grid-cols-2 place-content-center self-stretch [&>*]:px-4"
+            class="grid h-[4.25rem] grid-cols-3 place-content-center items-center self-stretch [&>*]:px-4"
         >
             <p class="truncate">
                 {$workspace?.name ?? "[no workspace]"}
             </p>
-            <p>
+            <p class="text-center">
                 {Math.floor(elapsedSeconds / 60)}:{Math.floor(
                     elapsedSeconds % 60,
                 )
                     .toString()
                     .padStart(2, "0")}
             </p>
+            <div class="-mt-1 flex gap-4 place-self-end">
+                {#if controllerConnected}
+                    <div class="flex flex-col items-center">
+                        <Gamepad size={45} />
+                        <div class="-mt-1 flex items-center">
+                            <div
+                                class="h-5 w-7 border-2 border-black bg-[#93C83F]"
+                            ></div>
+                            <div class="h-1.5 w-1 bg-black"></div>
+                        </div>
+                    </div>
+                    <div class="flex flex-col justify-end text-2xl text-white">
+                        <div class="flex items-end gap-1">
+                            {#each [0, 5, 10, 15, 20] as h}
+                                <div
+                                    class="w-1 bg-white"
+                                    style="height: {h + 10}px;"
+                                />
+                            {/each}
+                        </div>
+                        <p class="text-center leading-none">S</p>
+                    </div>
+                {/if}
+                <div class="flex flex-col items-center">
+                    <LaptopCodeSolid size={45} />
+                    <div class="-mt-1 flex items-center">
+                        <div
+                            class="h-5 w-7 border-2 border-black bg-[#93C83F]"
+                        ></div>
+                        <div class="h-1.5 w-1 bg-black"></div>
+                    </div>
+                </div>
+            </div>
         </div>
         {#if lines}
             <div
