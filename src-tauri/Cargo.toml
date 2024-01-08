@@ -38,6 +38,7 @@ tauri-plugin-gamepad = "0.0.2"
 gilrs = { version = "0.10.4", features = ["serde-serialize"] }
 serde = "1.0.193"
 serde_json = "1.0.108"
+tauri-plugin-theme = "0.2.0"
 
 [dependencies.tauri-plugin-sql]
 git = "https://github.com/tauri-apps/plugins-workspace"

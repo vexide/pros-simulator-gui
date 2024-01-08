@@ -16,9 +16,12 @@
     import { writable } from "svelte/store";
     import "./splitpanes.scss";
     import { onMount } from "svelte";
+    import GearSolid from "svelte-awesome-icons/GearSolid.svelte";
+    import Settings from "./lib/Settings.svelte";
 
     let installInfo = appInstallStatus();
     let installModalOpen = writable(false);
+    let settingsModalOpen = writable(false);
 
     installInfo.then((info) => {
         if (info.some((installed) => !installed)) {
@@ -63,9 +66,22 @@
         <Modal open={installModalOpen}>
             <FirstTimeSetup {components} />
         </Modal>
+        <Modal open={settingsModalOpen}>
+            <Settings />
+        </Modal>
         {#if $workspace}
-            <WorkspaceView />
+            <WorkspaceView {settingsModalOpen} />
         {:else}
+            <Button
+                class="absolute right-3 top-3 flex items-center justify-center p-2.5"
+                plain
+                large
+                title="Settings"
+                on:click={() => {
+                    $settingsModalOpen = true;
+                }}
+                icon={GearSolid}
+            />
             <div class="flex flex-1 items-center justify-center gap-4 p-4">
                 <Card title="Get Started" titleCentered>
                     <div class="grid grid-cols-2 gap-4 self-stretch">

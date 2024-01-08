@@ -202,6 +202,7 @@ fn main() {
             }],
         )
         .build();
+    let mut ctx = tauri::generate_context!();
     tauri::Builder::default()
         .manage(GamepadInput {
             method: Mutex::new(Gilrs::new().unwrap()),
@@ -279,6 +280,7 @@ fn main() {
         .plugin(db)
         .plugin(tauri_plugin_upload::init())
         .plugin(tauri_plugin_gamepad::init())
-        .run(tauri::generate_context!())
+        .plugin(tauri_plugin_theme::ThemePlugin::init(ctx.config_mut()))
+        .run(ctx)
         .expect("error while running tauri application");
 }

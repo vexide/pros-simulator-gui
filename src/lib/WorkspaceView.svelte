@@ -16,11 +16,13 @@
     import XmarkSolid from "svelte-awesome-icons/XmarkSolid.svelte";
     import CircleStopRegular from "svelte-awesome-icons/CircleStopRegular.svelte";
     import CirclePlayRegular from "svelte-awesome-icons/CirclePlayRegular.svelte";
+    import GearSolid from "svelte-awesome-icons/GearSolid.svelte";
     import HammerSolid from "svelte-awesome-icons/HammerSolid.svelte";
     import DeviceListView from "./DeviceListView.svelte";
     import type { Readable } from "svelte/motion";
 
     let controllerConnected: Readable<boolean>;
+    export let settingsModalOpen: Writable<boolean>;
 
     const start = () => Workspace.mutate((ws) => ws.startServer());
     const stop = () => Workspace.mutate((ws) => ws.stopServer());
@@ -40,6 +42,16 @@
                 Workspace.close();
             }}
             icon={XmarkSolid}
+        />
+        <Button
+            class="flex items-center justify-center self-stretch p-2.5"
+            plain
+            large
+            title="Settings"
+            on:click={() => {
+                $settingsModalOpen = true;
+            }}
+            icon={GearSolid}
         />
         <Button
             large
