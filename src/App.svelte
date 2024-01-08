@@ -18,6 +18,7 @@
     import { onMount } from "svelte";
     import GearSolid from "svelte-awesome-icons/GearSolid.svelte";
     import Settings from "./lib/Settings.svelte";
+    import { getVersion } from "@tauri-apps/api/app";
 
     let installInfo = appInstallStatus();
     let installModalOpen = writable(false);
@@ -69,6 +70,13 @@
         <Modal open={settingsModalOpen}>
             <Settings />
         </Modal>
+        {#await getVersion() then version}
+            {#if version.includes("-")}
+                <p class="secondary fixed bottom-0 right-3 text-xs">
+                    v{version}
+                </p>
+            {/if}
+        {/await}
         {#if $workspace}
             <WorkspaceView {settingsModalOpen} />
         {:else}

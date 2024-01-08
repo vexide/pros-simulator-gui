@@ -7,7 +7,7 @@
     },
     "package": {
         "productName": "PROS Simulator",
-        "version": "0.5.0"
+        "version": "0.6.0-beta.1"
     },
     "tauri": {
         "cli": {
@@ -120,6 +120,9 @@
                 ],
                 "open": "^file://.+",
                 "sidecar": false
+            },
+            "os": {
+                "all": true
             }
         },
         "bundle": {
