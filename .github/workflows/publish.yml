@@ -56,13 +56,26 @@ jobs:
             - name: install frontend dependencies
               run: pnpm install --frozen-lockfile
 
+            - name: Disable MSI for prereleases
+              id: check_tag
+              run: |
+                  ARGS="${{ matrix.settings.args }}"
+                  if [[ "${{ github.ref_name }}" == *-* && "${{ runner.os }}" == "Windows" ]]; then
+                    ARGS="$ARGS -b nsis"
+                  fi
+                  echo "::set-output name=args::$ARGS"
+              shell: bash
+
             - uses: tauri-apps/tauri-action@v0
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               with:
-                  tagName: ${{ github.ref_name }} # the action automatically replaces \_\_VERSION\_\_ with the app version
+                  tagName: ${{ github.ref_name }} # the action automatically replaces __VERSION__ with the app version
                   releaseName: "v__VERSION__"
-                  releaseBody: "See the assets to download this version and install."
+                  releaseBody: |
+                      See the assets to download this version and install.
+
+                      Recommended downloads: `*-setup.exe` (Windows), `*.app.tar.gz` (macOS), `*.deb` (Linux)
                   releaseDraft: true
                   prerelease: false
-                  args: ${{ matrix.settings.args }}
+                  args: ${{ steps.check_tag.outputs.args }}
