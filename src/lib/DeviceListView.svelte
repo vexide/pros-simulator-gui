@@ -91,7 +91,7 @@
             Controller Disconnected
         {/if}
     </p>
-    <ul class="overflow-y-scroll">
+    <ul class="overflow-y-auto">
         {#each filteredControllers as controller, _ (controller.id)}
             <li class="mr-2">
                 <DeviceView
