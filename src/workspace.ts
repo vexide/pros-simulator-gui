@@ -1,4 +1,4 @@
-import { readonly, writable, type Writable } from "svelte/store";
+import { get, readonly, writable, type Writable } from "svelte/store";
 import { database, type RecentWorkspace } from "./database.ts";
 import { invoke } from "@tauri-apps/api";
 import { join, sep } from "@tauri-apps/api/path";
@@ -15,6 +15,7 @@ import {
 import { buildProject } from "./build.ts";
 import { FitAddon } from "@xterm/addon-fit";
 import { WebglAddon } from "@xterm/addon-webgl";
+import { CanvasAddon } from "@xterm/addon-canvas";
 import { LinkProvider } from "xterm-link-provider";
 import {
     TerminalLinkDetectorAdapter,
@@ -24,6 +25,7 @@ import { open } from "@tauri-apps/api/shell";
 import { openInVSCode } from "./openFile.ts";
 import { title } from "./window.ts";
 import cliArgs from "./cli.ts";
+import settings from "./settings.ts";
 
 colors.enabled = true;
 
@@ -128,18 +130,31 @@ export class Workspace {
     #timer: number | undefined;
     server: Child | undefined;
     fitAddon = new FitAddon();
-    webglAddon = new WebglAddon();
 
     private constructor(
         public path: string,
         public name: string,
     ) {
         this.terminal.loadAddon(this.fitAddon);
-        this.terminal.loadAddon(this.webglAddon);
+        switch (get(settings.consoleRenderer)) {
+            case "webgl": {
+                const addon = new WebglAddon();
+                this.terminal.loadAddon(addon);
 
-        this.webglAddon.onContextLoss(() => {
-            this.webglAddon.dispose();
-        });
+                addon.onContextLoss(() => {
+                    addon.dispose();
+                });
+                break;
+            }
+            case "canvas": {
+                this.terminal.loadAddon(new CanvasAddon());
+                break;
+            }
+            case "none": {
+                // use default
+                break;
+            }
+        }
 
         this.terminal.registerLinkProvider(
             new TerminalLinkDetectorAdapter(

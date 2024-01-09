@@ -17,6 +17,9 @@ dependencies:
   '@tauri-apps/api':
     specifier: ^1.5.1
     version: 1.5.1
+  '@xterm/addon-canvas':
+    specifier: 0.6.0-beta.1
+    version: 0.6.0-beta.1(xterm@5.3.0)
   '@xterm/addon-fit':
     specifier: 0.9.0-beta.1
     version: 0.9.0-beta.1(xterm@5.3.0)
@@ -553,6 +556,14 @@ packages:
   /@types/pug@2.0.10:
     resolution: {integrity: sha512-Sk/uYFOBAB7mb74XcpizmH0KOR2Pv3D2Hmrh1Dmy5BmK3MpdSa5kqZcg6EKBdklU0bFXX9gCfzvpnyUehrPIuA==}
     dev: true
+
+  /@xterm/addon-canvas@0.6.0-beta.1(xterm@5.3.0):
+    resolution: {integrity: sha512-WQgEQa0t7D0JG6Pkgf0XqFaB9v2RuQq+/GhCZyyFN8jU/5T7zAMuZyuDgunffzB68YLymaMtsXoVeI4KMO9gAQ==}
+    peerDependencies:
+      xterm: ^5.0.0
+    dependencies:
+      xterm: 5.3.0
+    dev: false
 
   /@xterm/addon-fit@0.9.0-beta.1(xterm@5.3.0):
     resolution: {integrity: sha512-HmGRUMMamUpQYuQBF2VP1LJ0xzqF85LMFfpaNu84t1Tsrl1lPKJWtqX9FDZ22Rf5q6bnKdbj44TRVAUHgDRbLA==}
