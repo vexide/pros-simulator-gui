@@ -63,7 +63,7 @@ jobs:
                   if [[ "${{ github.ref_name }}" == *-* && "${{ runner.os }}" == "Windows" ]]; then
                     ARGS="$ARGS -b nsis"
                   fi
-                  echo "::set-output name=args::$ARGS"
+                  echo "args=$ARGS" >> $GITHUB_OUTPUT
               shell: bash
 
             - uses: tauri-apps/tauri-action@v0
