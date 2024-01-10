@@ -1,4 +1,5 @@
 import { writable, type Writable } from "svelte/store";
+import { isLinux } from "./detectTransparencySupport.js";
 
 export type ConsoleRenderer = "webgl" | "canvas" | "none";
 
@@ -12,7 +13,7 @@ export type Settings = {
 
 function initSettings(): Settings {
     const defaultSettings: Readonly<ISettings> = {
-        consoleRenderer: "webgl",
+        consoleRenderer: isLinux() ? "none" : "webgl",
     };
     const settings: Record<string, Writable<any>> = {};
 
