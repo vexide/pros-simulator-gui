@@ -76,6 +76,7 @@ export class SimTerminal extends Terminal {
 
 export class Workspace {
     static open(path: string) {
+        console.log("Opening:", path);
         const components = path.split(sep);
         let name = components.pop();
         if (name === "") {
@@ -86,15 +87,18 @@ export class Workspace {
     }
 
     static openRecent(recent: RecentWorkspace) {
+        console.log("Using recent workspace:", recent);
         const ws = new Workspace(recent.path, recent.name);
         workspace.set(ws);
     }
 
     static close() {
+        console.log("Closing workspace");
         workspace.set(null);
     }
 
     static mutate(fn: (ws: Workspace) => void) {
+        console.log("Mutating workspace");
         workspace.update((ws) => {
             if (ws) {
                 fn(ws);
@@ -135,9 +139,11 @@ export class Workspace {
         public path: string,
         public name: string,
     ) {
+        console.log("Initializing workspace");
         this.terminal.loadAddon(this.fitAddon);
         switch (get(settings.consoleRenderer)) {
             case "webgl": {
+                console.log("Using webgl renderer");
                 const addon = new WebglAddon();
                 this.terminal.loadAddon(addon);
 
@@ -147,15 +153,17 @@ export class Workspace {
                 break;
             }
             case "canvas": {
+                console.log("Using canvas renderer");
                 this.terminal.loadAddon(new CanvasAddon());
                 break;
             }
             case "none": {
-                // use default
+                console.log("Using compat renderer");
                 break;
             }
         }
 
+        console.log("Using link provider");
         this.terminal.registerLinkProvider(
             new TerminalLinkDetectorAdapter(
                 new TerminalLocalLinkDetector(this.terminal),
@@ -183,6 +191,7 @@ export class Workspace {
                 },
             ),
         );
+        console.log("Ready to render workspace");
     }
 
     tick() {
@@ -190,6 +199,7 @@ export class Workspace {
     }
 
     startServer() {
+        console.log("Starting server!", this);
         if (this.#serverProcess) {
             return;
         }
@@ -246,6 +256,7 @@ export class Workspace {
     }
 
     stopServer() {
+        console.log("Stopping server!", this);
         if (this.#serverProcess) {
             this.#serverProcess.abort();
         }
@@ -253,6 +264,7 @@ export class Workspace {
     }
 
     afterFinish() {
+        console.log("Server finished", this);
         this.server = undefined;
         this.#serverProcess = undefined;
         clearInterval(this.#timer);
@@ -269,6 +281,7 @@ export class Workspace {
     }
 
     handleEvent(event: unknown) {
+        console.log("Recieved event", this, event);
         if (typeof event === "string") {
             this.#handleStringEvent(event as StringEvent);
         } else if (typeof event === "object" && event) {
@@ -323,6 +336,7 @@ export class Workspace {
     }
 
     async build() {
+        console.log("Building project", this);
         this.#buildProcess?.abort();
         this.#buildProcess = new AbortController();
         const { terminal } = this;
@@ -366,6 +380,7 @@ workspace.subscribe((ws) => {
                 ON CONFLICT(path) DO UPDATE SET last_opened = unixepoch();`,
                 [ws.name, ws.path],
             );
+            console.log("Added recent workspace:", ws);
         });
     }
     oldWs = ws;
