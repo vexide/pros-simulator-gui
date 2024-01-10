@@ -1,4 +1,6 @@
 <script lang="ts">
+    import DeviceButton from "./DeviceButton.svelte";
+
     import Card from "./Card.svelte";
     import Form from "./Form.svelte";
     import controllers, {
@@ -12,10 +14,12 @@
     import Button from "./Button.svelte";
     import SegmentedControl from "./SegmentedControl.svelte";
     import DeviceView from "./DeviceView.svelte";
+    import Gamepad2 from "svelte-lucide/Gamepad2.svelte";
     import { writable, derived } from "svelte/store";
     import TriangleExclamationSolid from "svelte-awesome-icons/TriangleExclamationSolid.svelte";
     import type { ControllerStateMessage } from "../sidecar.ts";
     import { Workspace } from "../workspace.ts";
+    import { DeviceSpec } from "../smart-devices.ts";
 
     const controllerTypes = writable<("primary" | "secondary" | "none")[]>(
         Array.from({ length: $controllers.length }, () => "none"),
@@ -82,6 +86,8 @@
     $: filteredControllers = $controllers.filter<Controller>(
         (x): x is Controller => x !== null,
     );
+
+    const ports = Array.from({ length: 21 }).map((_, i) => i + 1);
 </script>
 
 <Card title="Devices" class="min-w-[35ch]">
@@ -91,20 +97,21 @@
             Controller Disconnected
         {/if}
     </p>
-    <ul class="overflow-y-auto">
-        {#each filteredControllers as controller, _ (controller.id)}
-            <li class="mr-2">
-                <DeviceView
-                    {controller}
-                    id={controller.id}
-                    type={$controllerTypes[controller.id] ?? "none"}
-                    onTypeChange={(type) => setType(controller.id, type)}
-                />
-            </li>
-        {:else}
-            <p class="secondary">
-                Connect a wired or Bluetooth controller to configure.
-            </p>
-        {/each}
-    </ul>
+    <div class="overflow-y-scroll">
+        <ul class="m-2 grid grid-cols-7 grid-rows-4 gap-4">
+            <DeviceButton spec={DeviceSpec.Controller}>2</DeviceButton>
+            <DeviceButton spec={DeviceSpec.Controller}>1</DeviceButton>
+            <DeviceButton spec={undefined}>1</DeviceButton>
+            <DeviceButton spec={undefined}>1</DeviceButton>
+            <DeviceButton spec={undefined}>1</DeviceButton>
+            {#each ports as port}
+                <DeviceButton
+                    spec={DeviceSpec.Empty}
+                    class={twMerge(port === 1 && "col-[1]")}
+                >
+                    {port}
+                </DeviceButton>
+            {/each}
+        </ul>
+    </div>
 </Card>

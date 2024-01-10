@@ -6,7 +6,7 @@
     import { workspace, Workspace } from "../workspace.ts";
     import LcdButton from "./LcdButton.svelte";
     import LaptopCodeSolid from "svelte-awesome-icons/LaptopCodeSolid.svelte";
-    import Gamepad from "svelte-lucide/Gamepad2.svelte";
+    import Gamepad2 from "svelte-lucide/Gamepad2.svelte";
 
     let container: HTMLDivElement;
     let lcd: HTMLDivElement;
@@ -58,7 +58,7 @@
             <div class="-mt-1 flex gap-4 place-self-end">
                 {#if controllerConnected}
                     <div class="flex flex-col items-center">
-                        <Gamepad size={45} />
+                        <Gamepad2 size={45} />
                         <div class="-mt-1 flex items-center">
                             <div
                                 class="h-5 w-7 border-2 border-black bg-[#93C83F]"
