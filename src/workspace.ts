@@ -314,6 +314,9 @@ export class Workspace {
                 this.terminal.log("Robot code completed", Msg.Progress);
                 break;
             }
+            default: {
+                this.terminal.log(`Unknown event: ${name}`, Msg.Info);
+            }
         }
     }
 
@@ -331,6 +334,13 @@ export class Workspace {
             case "Warning": {
                 this.terminal.log(payload, Msg.Error);
                 break;
+            }
+
+            default: {
+                this.terminal.log(
+                    `Unknown event: ${variant} ${JSON.stringify(payload)}`,
+                    Msg.Info,
+                );
             }
         }
     }
