@@ -149,10 +149,29 @@ export async function appInstallStatus() {
     return status;
 }
 
+export type SmartDeviceSpec = "Motor";
+
+export type MotorEncoderUnits = "Degrees" | "Rotations" | "Counts";
+export type MotorBrakeMode = "Coast" | "Brake" | "Hold";
+
+export interface MotorUpdate {
+    port: number;
+    volts: number;
+    encoder_units: MotorEncoderUnits;
+    brake_mode: MotorBrakeMode;
+}
+
+export interface Phase {
+    autonomous: boolean;
+    enabled: boolean;
+    is_competition: boolean;
+}
+
 export type StringEvent =
-    | "RobotCodeLoading"
-    | "RobotCodeStarting"
-    | "RobotCodeFinished"
+    | "Loading"
+    | "ResourcesRequired"
+    | "RobotCodeRunning"
+    | "AllTasksFinished"
     | "LcdInitialized"
     | "LcdShutdown";
 export type ObjectEvent =
@@ -160,13 +179,17 @@ export type ObjectEvent =
     | ["ConsoleMessage", string]
     | ["RobotCodeError", { message: string; backtrace: string }]
     | ["LcdUpdated", string[]]
-    | ["LcdColorsUpdated", number, number];
-export type Message =
+    | ["LcdColorsUpdated", number, number]
+    | ["MotorUpdated", MotorUpdate];
+export type ObjectMessage =
     | [
           "ControllerUpdate",
           [ControllerStateMessage | null, ControllerStateMessage | null],
       ]
-    | ["LcdButtonsUpdate", [boolean, boolean, boolean]];
+    | ["LcdButtonsUpdate", [boolean, boolean, boolean]]
+    | ["PhaseChange", Phase]
+    | ["PortsUpdate", Record<number, SmartDeviceSpec>];
+export type StringMessage = "BeginSimulation";
 
 export interface ControllerStateMessage {
     digital: DigitalControllerState;

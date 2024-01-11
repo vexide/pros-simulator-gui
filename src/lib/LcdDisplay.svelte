@@ -20,7 +20,7 @@
     const update = (button: number, value: boolean) => {
         presses[button] = value;
         presses = presses;
-        Workspace.mutate((ws) => ws.sendInput(["LcdButtonsUpdate", presses]));
+        Workspace.mutate((ws) => ws.sendMessage("LcdButtonsUpdate", presses));
     };
 
     onMount(() => {
