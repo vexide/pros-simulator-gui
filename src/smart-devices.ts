@@ -18,3 +18,25 @@ export function getDeviceName(spec: DeviceSpec | null) {
         }
     }
 }
+
+export interface Device {
+    spec: DeviceSpec;
+}
+
+export abstract class SmartDevice implements Device {
+    abstract spec: DeviceSpec;
+    abstract port: number;
+
+    name() {
+        return getDeviceName(this.spec);
+    }
+}
+
+export class MotorDevice extends SmartDevice {
+    spec = DeviceSpec.Motor;
+    constructor(public port: number) {
+        super();
+    }
+
+    reversed = false;
+}

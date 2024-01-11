@@ -1,6 +1,6 @@
 <script lang="ts">
     import { getContext, onMount } from "svelte";
-    import type { Writable } from "svelte/store";
+    import { readable, type Writable } from "svelte/store";
     import Card from "./Card.svelte";
     import Button from "./Button.svelte";
     import { Workspace } from "../workspace.ts";
@@ -18,10 +18,10 @@
     import CirclePlayRegular from "svelte-awesome-icons/CirclePlayRegular.svelte";
     import GearSolid from "svelte-awesome-icons/GearSolid.svelte";
     import HammerSolid from "svelte-awesome-icons/HammerSolid.svelte";
-    import DeviceListView from "./DeviceListView.svelte";
+    import DevicesView from "./DevicesView.svelte";
     import type { Readable } from "svelte/motion";
 
-    let controllerConnected: Readable<boolean>;
+    let controllerConnected: Readable<boolean> = readable(false);
     export let settingsModalOpen: Writable<boolean>;
 
     const start = () => Workspace.mutate((ws) => ws.startServer());
@@ -82,7 +82,7 @@
         }}
     >
         <Pane minSize={20} class="flex gap-4">
-            <DeviceListView bind:controllerConnected />
+            <DevicesView />
             <Card title="LCD Display" class="shrink-0">
                 <LcdDisplay
                     controllerConnected={$controllerConnected}
