@@ -83,7 +83,7 @@
     >
         <Pane minSize={20} class="flex gap-4">
             <DeviceListView bind:controllerConnected />
-            <Card title="LCD Display" class="flex-1 shrink-0">
+            <Card title="LCD Display" class="shrink-0">
                 <LcdDisplay
                     controllerConnected={$controllerConnected}
                     lines={$workspace?.state.lcdLines}

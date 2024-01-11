@@ -16,17 +16,16 @@
         gamepadDigital,
     } from "../controllers.ts";
     import { twMerge } from "tailwind-merge";
-    import { enabled } from "ansi-colors";
-    import Divider from "./Divider.svelte";
-    import Button from "./Button.svelte";
-    import SegmentedControl from "./SegmentedControl.svelte";
-    import DeviceView from "./DeviceView.svelte";
-    import Gamepad2 from "svelte-lucide/Gamepad2.svelte";
     import { writable, derived } from "svelte/store";
     import TriangleExclamationSolid from "svelte-awesome-icons/TriangleExclamationSolid.svelte";
     import type { ControllerStateMessage } from "../sidecar.ts";
     import { Workspace } from "../workspace.ts";
-    import { DeviceSpec } from "../smart-devices.ts";
+    import { DeviceSpec, getDeviceName } from "../smart-devices.ts";
+    import WithContext from "./WithContext.svelte";
+    import { dismiss } from "../context.ts";
+    import DeviceDetailView from "./DeviceDetailView.svelte";
+    import Button from "./Button.svelte";
+    import DevicePicker, { type PickableDevice } from "./DevicePicker.svelte";
 
     const controllerTypes = writable<("primary" | "secondary" | "none")[]>(
         Array.from({ length: $controllers.length }, () => "none"),
@@ -94,32 +93,75 @@
         (x): x is Controller => x !== null,
     );
 
-    const ports = Array.from({ length: 21 }).map((_, i) => i + 1);
-    const openDetailView = writable<DeviceDetail | undefined>(undefined);
+    const ports = Array.from({ length: 21 }).map((_, i) => i);
+
+    let openDetailView: DeviceDetail | undefined = undefined;
+    let pickerShown = false;
+
+    let proposedPickable: PickableDevice | undefined = undefined;
+    let proposedControllerId: number | undefined = undefined;
+
+    let connectedDevices: (DeviceSpec | null)[] = ports.map(() => null);
 </script>
 
-<Card title="Devices" class="min-w-[35ch]">
-    <p slot="actions" class="flex items-center gap-1 text-orange-500">
-        {#if filteredControllers.length === 0 && $controllers.length > 0}
-            <TriangleExclamationSolid size={12} />
-            Controller Disconnected
-        {/if}
-    </p>
-    <div class="overflow-y-scroll">
-        {#if $openDetailView}
-            Details for {$openDetailView.controller ? "controller" : "device"}
-            {$openDetailView.port}
-            <Button
-                on:click={() => {
-                    $openDetailView = undefined;
-                }}>Close</Button
+<Card title="Devices" class="min-w-[35ch] flex-1">
+    <div slot="actions">
+        <p class="flex items-center gap-1 text-orange-500">
+            {#if filteredControllers.length === 0 && $controllers.length > 0}
+                <TriangleExclamationSolid size={12} />
+                Controller Disconnected
+            {/if}
+        </p>
+
+        <Button on:click={() => (pickerShown = !pickerShown)}>
+            Toggle picker
+        </Button>
+    </div>
+    <div class={twMerge("overflow-y-scroll", pickerShown ? "" : "self-center")}>
+        {#if pickerShown}
+            <WithContext ctx={dismiss} value={() => (pickerShown = false)}>
+                <DevicePicker
+                    choices={[
+                        ...filteredControllers.map((controller) => {
+                            return {
+                                spec: DeviceSpec.Controller,
+                                description: `Controller ${controller.id + 1}`,
+                                onPick() {
+                                    proposedPickable = this;
+                                    proposedControllerId = controller.id;
+                                },
+                            };
+                        }),
+                        {
+                            spec: DeviceSpec.Motor,
+                            description: "V5 Smart Motor",
+                            onPick() {
+                                proposedPickable = this;
+                            },
+                        },
+                        {
+                            spec: null,
+                            description: "Disable this device",
+                            onPick() {
+                                proposedPickable = this;
+                            },
+                        },
+                    ]}
+                />
+            </WithContext>
+        {:else if $openDetailView}
+            <WithContext
+                ctx={dismiss}
+                value={() => ($openDetailView = undefined)}
             >
+                <DeviceDetailView device={$openDetailView} />
+            </WithContext>
         {:else}
             <ul class="m-2 grid grid-cols-7 grid-rows-4 gap-4">
                 <DeviceButton
                     spec={DeviceSpec.Controller}
                     on:click={() => {
-                        $openDetailView = {
+                        openDetailView = {
                             controller: true,
                             port: 2,
                         };
@@ -128,7 +170,7 @@
                 <DeviceButton
                     spec={DeviceSpec.Controller}
                     on:click={() => {
-                        $openDetailView = {
+                        openDetailView = {
                             controller: true,
                             port: 1,
                         };
@@ -139,19 +181,26 @@
                 <DeviceButton spec={undefined}></DeviceButton>
                 {#each ports as port}
                     <DeviceButton
-                        spec={DeviceSpec.Empty}
-                        class={twMerge(port === 1 && "col-[1]")}
+                        spec={connectedDevices[port]}
+                        class={twMerge(port === 0 && "col-[1]")}
                         on:click={() => {
-                            $openDetailView = {
+                            if (proposedPickable) {
+                                connectedDevices[port] = proposedPickable.spec;
+                                proposedPickable = undefined;
+                            }
+                            openDetailView = {
                                 controller: false,
                                 port,
                             };
                         }}
                     >
-                        {port}
+                        {port + 1}
                     </DeviceButton>
                 {/each}
             </ul>
+            {#if proposedPickable !== undefined}
+                Picking {getDeviceName(proposedPickable.spec)}
+            {/if}
         {/if}
     </div>
 </Card>

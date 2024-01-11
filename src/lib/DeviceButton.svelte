@@ -2,10 +2,12 @@
     import Gamepad2 from "svelte-lucide/Gamepad2.svelte";
     import CircleXmarkRegular from "svelte-awesome-icons/CircleXmarkRegular.svelte";
     import QuestionSolid from "svelte-awesome-icons/QuestionSolid.svelte";
+    import BoltSolid from "svelte-awesome-icons/BoltSolid.svelte";
     import { twMerge } from "tailwind-merge";
     import { DeviceSpec } from "../smart-devices.ts";
 
-    export let spec: DeviceSpec | undefined;
+    // undefined for disabled, null for no device
+    export let spec: DeviceSpec | undefined | null;
     let className = "";
     export { className as class };
 </script>
@@ -23,6 +25,8 @@
     {#if spec !== undefined}
         {#if spec === DeviceSpec.Controller}
             <Gamepad2 size={25} />
+        {:else if spec == DeviceSpec.Motor}
+            <BoltSolid size={15} />
         {:else}
             <span class="text-neutral-500">
                 <CircleXmarkRegular size={15} />

@@ -1,4 +1,20 @@
+import type BoltSolid from "svelte-awesome-icons/BoltSolid.svelte";
+
 export enum DeviceSpec {
-    Empty,
     Controller,
+    Motor,
+}
+
+export function getDeviceName(spec: DeviceSpec | null) {
+    switch (spec) {
+        case DeviceSpec.Controller: {
+            return "Controller";
+        }
+        case DeviceSpec.Motor: {
+            return "Motor";
+        }
+        case null: {
+            return "None";
+        }
+    }
 }
