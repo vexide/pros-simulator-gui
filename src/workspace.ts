@@ -10,7 +10,8 @@ import {
     spawnServer,
     type ObjectEvent,
     type StringEvent,
-    type Message,
+    type ObjectMessage,
+    type StringMessage,
 } from "./sidecar.ts";
 import { buildProject } from "./build.ts";
 import { FitAddon } from "@xterm/addon-fit";
@@ -270,12 +271,20 @@ export class Workspace {
         clearInterval(this.#timer);
     }
 
-    async sendInput(event: Message) {
+    async sendMessage<T extends ObjectMessage | [message: StringMessage]>(
+        ...args: T
+    ) {
+        const [event, payload] = args;
         if (this.server) {
-            const text =
-                JSON.stringify({
-                    [event[0]]: event[1],
-                }) + "\n";
+            let text;
+            if (payload === undefined) {
+                text = JSON.stringify(event) + "\n";
+            } else {
+                text =
+                    JSON.stringify({
+                        [event]: payload,
+                    }) + "\n";
+            }
             await this.server.write(text);
         }
     }
@@ -293,7 +302,7 @@ export class Workspace {
 
     #handleStringEvent(name: StringEvent) {
         switch (name) {
-            case "RobotCodeStarting": {
+            case "RobotCodeRunning": {
                 this.terminal.log("Robot code running", Msg.Progress);
                 this.#timer = setInterval(
                     () => Workspace.mutate((ws) => ws.tick()),
@@ -309,10 +318,25 @@ export class Workspace {
                 this.state.lcdLines = undefined;
                 break;
             }
-            case "RobotCodeFinished": {
+            case "AllTasksFinished": {
                 clearInterval(this.#timer);
                 this.terminal.log("Robot code completed", Msg.Progress);
                 break;
+            }
+            case "ResourcesRequired": {
+                this.sendMessage("PortsUpdate", {
+                    1: "Motor",
+                });
+                this.sendMessage("BeginSimulation");
+                this.sendMessage("PhaseChange", {
+                    autonomous: false,
+                    enabled: true,
+                    is_competition: false,
+                });
+                break;
+            }
+            default: {
+                this.terminal.log(`Unknown event: ${name}`, Msg.Info);
             }
         }
     }
@@ -331,6 +355,13 @@ export class Workspace {
             case "Warning": {
                 this.terminal.log(payload, Msg.Error);
                 break;
+            }
+
+            default: {
+                this.terminal.log(
+                    `Unknown event: ${variant} ${JSON.stringify(payload)}`,
+                    Msg.Info,
+                );
             }
         }
     }
