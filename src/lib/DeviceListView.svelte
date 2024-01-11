@@ -1,3 +1,10 @@
+<script lang="ts" context="module">
+    export interface DeviceDetail {
+        controller: boolean;
+        port: number;
+    }
+</script>
+
 <script lang="ts">
     import DeviceButton from "./DeviceButton.svelte";
 
@@ -88,6 +95,7 @@
     );
 
     const ports = Array.from({ length: 21 }).map((_, i) => i + 1);
+    const openDetailView = writable<DeviceDetail | undefined>(undefined);
 </script>
 
 <Card title="Devices" class="min-w-[35ch]">
@@ -98,20 +106,52 @@
         {/if}
     </p>
     <div class="overflow-y-scroll">
-        <ul class="m-2 grid grid-cols-7 grid-rows-4 gap-4">
-            <DeviceButton spec={DeviceSpec.Controller}>2</DeviceButton>
-            <DeviceButton spec={DeviceSpec.Controller}>1</DeviceButton>
-            <DeviceButton spec={undefined}>1</DeviceButton>
-            <DeviceButton spec={undefined}>1</DeviceButton>
-            <DeviceButton spec={undefined}>1</DeviceButton>
-            {#each ports as port}
+        {#if $openDetailView}
+            Details for {$openDetailView.controller ? "controller" : "device"}
+            {$openDetailView.port}
+            <Button
+                on:click={() => {
+                    $openDetailView = undefined;
+                }}>Close</Button
+            >
+        {:else}
+            <ul class="m-2 grid grid-cols-7 grid-rows-4 gap-4">
                 <DeviceButton
-                    spec={DeviceSpec.Empty}
-                    class={twMerge(port === 1 && "col-[1]")}
+                    spec={DeviceSpec.Controller}
+                    on:click={() => {
+                        $openDetailView = {
+                            controller: true,
+                            port: 2,
+                        };
+                    }}>2</DeviceButton
                 >
-                    {port}
-                </DeviceButton>
-            {/each}
-        </ul>
+                <DeviceButton
+                    spec={DeviceSpec.Controller}
+                    on:click={() => {
+                        $openDetailView = {
+                            controller: true,
+                            port: 1,
+                        };
+                    }}>1</DeviceButton
+                >
+                <DeviceButton spec={undefined}></DeviceButton>
+                <DeviceButton spec={undefined}></DeviceButton>
+                <DeviceButton spec={undefined}></DeviceButton>
+                {#each ports as port}
+                    <DeviceButton
+                        spec={DeviceSpec.Empty}
+                        class={twMerge(port === 1 && "col-[1]")}
+                        on:click={() => {
+                            $openDetailView = {
+                                controller: false,
+                                port,
+                            };
+                        }}
+                    >
+                        {port}
+                    </DeviceButton>
+                {/each}
+            </ul>
+        {/if}
     </div>
 </Card>

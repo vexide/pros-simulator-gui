@@ -14,10 +14,11 @@
     type="button"
     class={twMerge(
         "flex h-12 w-12 flex-col items-center justify-evenly rounded-md bg-neutral-500 p-1 leading-none dark:bg-neutral-800",
-        spec !== undefined && "active:bg-neutral-600",
+        spec !== undefined && "active:dark:bg-neutral-600",
         className,
     )}
     disabled={spec === undefined}
+    on:click
 >
     {#if spec !== undefined}
         {#if spec === DeviceSpec.Controller}
