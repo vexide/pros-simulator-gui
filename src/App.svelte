@@ -93,9 +93,9 @@
             <div class="flex flex-1 items-center justify-center gap-4 p-4">
                 <Card title="Get Started" titleCentered>
                     <div class="grid grid-cols-2 gap-4 self-stretch">
-                        <Button on:click={pickWorkspace} class="flex-1"
-                            >Open workspace</Button
-                        >
+                        <Button on:click={pickWorkspace} class="flex-1">
+                            Open workspace
+                        </Button>
                         <p class="secondary flex-1 text-center">
                             Or pick recent:
                         </p>

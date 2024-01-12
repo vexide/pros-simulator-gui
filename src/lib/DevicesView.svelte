@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { writable, type Writable } from "svelte/store";
+    import { get, writable, type Writable } from "svelte/store";
     import Card from "./Card.svelte";
     import {
         MotorDevice,
@@ -9,7 +9,7 @@
     import DeviceDetailsView from "./DeviceDetailsView.svelte";
     import Button from "./Button.svelte";
 
-    let devices: Writable<Device>[] = [];
+    let devices: Writable<Device | null>[] = [];
 </script>
 
 <Card title="Devices" class="min-w-[35ch] flex-1">
@@ -17,7 +17,9 @@
         <Button
             class="btn btn-primary"
             on:click={() => {
-                devices = [...devices, writable(new MotorDevice(1))];
+                if (!devices.some((d) => get(d) === null)) {
+                    devices = [...devices, writable(null)];
+                }
             }}>Add</Button
         >
     </div>
