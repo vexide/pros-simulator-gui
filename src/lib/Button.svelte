@@ -14,6 +14,7 @@
     const context = getContext<ButtonContext | undefined>(buttonStyle);
     export let large = context?.large ?? false;
     export let primary = false;
+    export let destructive = false;
     export let disabled = false;
     export let plain = context?.plain ?? false;
     export let title: string | undefined = undefined;
@@ -49,13 +50,16 @@
         primary &&
             !disabled &&
             "from-blue-500/90 to-blue-600/90 text-white shadow active:from-blue-600 active:to-blue-600 active:text-blue-100",
-        primary && "font-semibold",
+        (primary || destructive) && "font-semibold",
         !primary &&
             "dark:from-neutral-600 dark:to-neutral-700 dark:active:to-neutral-600",
+        destructive &&
+            !disabled &&
+            "from-red-500/90 to-red-600/90 text-white shadow active:from-red-600 active:to-red-600 active:text-red-100",
         disabled &&
             "pointer-events-none bg-neutral-100 text-black/50 shadow-neutral-500/10 transition-colors dark:bg-neutral-800 dark:text-white/50",
         plain &&
-            "self-baseline border-neutral-200 bg-transparent shadow-none active:from-neutral-300 dark:border-solid dark:border-white/30 dark:from-transparent dark:to-transparent dark:active:bg-neutral-500/50",
+            "self-baseline border-neutral-200 from-transparent to-transparent shadow-none active:from-neutral-300 dark:border-solid dark:border-white/30 dark:from-transparent dark:to-transparent dark:active:bg-neutral-500/50",
         className,
     )}
     type="button"

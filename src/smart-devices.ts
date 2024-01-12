@@ -1,5 +1,7 @@
 import type BoltSolid from "svelte-awesome-icons/BoltSolid.svelte";
 
+export const ports = Array.from({ length: 21 }).map((_, i) => i);
+
 export enum DeviceSpec {
     Controller,
     Motor,
@@ -26,6 +28,17 @@ export interface Device {
 export abstract class SmartDevice implements Device {
     abstract spec: DeviceSpec;
     abstract port: number;
+
+    static create(spec: DeviceSpec, port: number): SmartDevice {
+        switch (spec) {
+            case DeviceSpec.Controller: {
+                throw new Error("Not implemented");
+            }
+            case DeviceSpec.Motor: {
+                return new MotorDevice(port);
+            }
+        }
+    }
 
     name() {
         return getDeviceName(this.spec);

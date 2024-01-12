@@ -8,22 +8,27 @@
     } from "../smart-devices.ts";
     import DeviceDetailsView from "./DeviceDetailsView.svelte";
     import Button from "./Button.svelte";
+    import PlusSolid from "svelte-awesome-icons/PlusSolid.svelte";
 
     let devices: Writable<Device | null>[] = [];
 </script>
 
-<Card title="Devices" class="min-w-[35ch] flex-1">
+<Card title="Devices" class="flex-1">
     <div slot="actions">
         <Button
             class="btn btn-primary"
+            large
+            title="Create new device"
             on:click={() => {
                 if (!devices.some((d) => get(d) === null)) {
-                    devices = [...devices, writable(null)];
+                    devices = [writable(null), ...devices];
                 }
-            }}>Add</Button
+            }}
         >
+            <PlusSolid size={15} />
+        </Button>
     </div>
-    <ul>
+    <ul class="flex flex-wrap gap-4 overflow-y-auto pb-6">
         {#each devices as device}
             <DeviceDetailsView
                 {device}

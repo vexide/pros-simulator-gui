@@ -35,7 +35,6 @@
     <div class="flex gap-4 self-stretch p-4 pb-0">
         <Button
             class="flex items-center justify-center self-stretch p-2.5"
-            plain
             large
             title="Close workspace"
             on:click={() => {
@@ -45,7 +44,6 @@
         />
         <Button
             class="flex items-center justify-center self-stretch p-2.5"
-            plain
             large
             title="Settings"
             on:click={() => {

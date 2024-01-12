@@ -11,7 +11,7 @@
 
 {#if spec !== undefined}
     {#if spec === DeviceSpec.Controller}
-        <Gamepad2 size={size + 10} />
+        <Gamepad2 {size} />
     {:else if spec == DeviceSpec.Motor}
         <BoltSolid {size} />
     {:else}

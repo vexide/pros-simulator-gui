@@ -82,7 +82,6 @@
         {:else}
             <Button
                 class="absolute right-3 top-3 flex items-center justify-center p-2.5"
-                plain
                 large
                 title="Settings"
                 on:click={() => {
