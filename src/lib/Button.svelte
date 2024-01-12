@@ -44,16 +44,18 @@
     bind:this={button}
     {title}
     class={twMerge(
-        "flex items-center justify-center gap-2 rounded-lg border bg-white px-4 shadow shadow-neutral-500/10 active:bg-neutral-300 dark:border-none dark:bg-neutral-600 dark:shadow-black/30 dark:active:bg-neutral-500",
+        "flex items-center justify-center gap-2 rounded-lg border border-neutral-200 bg-gradient-to-b from-white via-80% to-neutral-50 px-4 font-normal shadow shadow-neutral-400/10 active:from-neutral-200 active:to-neutral-300 dark:border-none dark:shadow-black/30",
         large && "py-1.5",
         primary &&
             !disabled &&
-            "bg-gradient-to-b from-blue-500/90 to-blue-600/90 text-white shadow active:bg-blue-600 active:text-blue-100",
+            "from-blue-500/90 to-blue-600/90 text-white shadow active:from-blue-600 active:to-blue-600 active:text-blue-100",
         primary && "font-semibold",
+        !primary &&
+            "dark:from-neutral-600 dark:to-neutral-700 dark:active:to-neutral-600",
         disabled &&
             "pointer-events-none bg-neutral-100 text-black/50 shadow-neutral-500/10 transition-colors dark:bg-neutral-800 dark:text-white/50",
         plain &&
-            "self-baseline border-neutral-200 bg-transparent shadow-none dark:border-solid dark:border-white/20 dark:bg-transparent dark:active:bg-neutral-500/50",
+            "self-baseline border-neutral-200 bg-transparent shadow-none active:from-neutral-300 dark:border-solid dark:border-white/30 dark:from-transparent dark:to-transparent dark:active:bg-neutral-500/50",
         className,
     )}
     type="button"
