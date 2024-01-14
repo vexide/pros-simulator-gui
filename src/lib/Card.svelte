@@ -19,7 +19,7 @@
         {#if title}
             <h2
                 class={twMerge(
-                    "mb-1 flex-1 text-xl font-bold",
+                    "mb-1 text-xl font-bold",
                     titleCentered && "self-center",
                 )}
             >

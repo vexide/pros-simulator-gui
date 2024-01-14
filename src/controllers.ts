@@ -1,12 +1,13 @@
 import { emit, listen } from "@tauri-apps/api/event";
 import { invoke } from "@tauri-apps/api/tauri";
-import { readable, readonly, writable } from "svelte/store";
+import { derived, readable, readonly, writable } from "svelte/store";
 import type { ArrayValues } from "type-fest";
 import type {
     ControllerStateMessage,
     DigitalControllerState,
     AnalogControllerState,
 } from "./sidecar.ts";
+import { DeviceSpec, type Device } from "./smart-devices.ts";
 
 export const gamepadAnalog = ["LeftX", "LeftY", "RightX", "RightY"] as const;
 /**
@@ -137,3 +138,7 @@ listen<GamepadEvent>("gamepad", ({ payload }) => {
 invoke("connect_all_gamepads");
 
 export default readonly(controllers);
+
+export const filteredControllers = derived(controllers, (c) =>
+    c.filter<Controller>((x): x is Controller => x !== null),
+);

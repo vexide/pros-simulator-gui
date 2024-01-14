@@ -1,4 +1,5 @@
 import type BoltSolid from "svelte-awesome-icons/BoltSolid.svelte";
+import type { Controller } from "./controllers.ts";
 
 export const ports = Array.from({ length: 21 }).map((_, i) => i);
 
@@ -26,7 +27,7 @@ export interface Device {
 }
 
 export abstract class SmartDevice implements Device {
-    abstract spec: DeviceSpec;
+    abstract readonly spec: DeviceSpec;
     abstract port: number;
 
     static create(spec: DeviceSpec, port: number): SmartDevice {
@@ -46,10 +47,20 @@ export abstract class SmartDevice implements Device {
 }
 
 export class MotorDevice extends SmartDevice {
-    spec = DeviceSpec.Motor;
+    override readonly spec = DeviceSpec.Motor;
+
     constructor(public port: number) {
         super();
     }
 
     reversed = false;
+}
+
+export class ControllerDevice implements Device {
+    readonly spec = DeviceSpec.Controller;
+
+    constructor(
+        public controllerId: number,
+        public isPartner: boolean,
+    ) {}
 }
