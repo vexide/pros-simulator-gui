@@ -55,7 +55,7 @@
             "dark:from-neutral-600 dark:to-neutral-700 dark:active:to-neutral-600",
         destructive &&
             !disabled &&
-            "from-red-500/90 to-red-600/90 text-white shadow active:from-red-600 active:to-red-600 active:text-red-100",
+            "from-red-500/90 to-red-600/90 text-white shadow active:from-red-600 active:to-red-700 active:text-red-100 dark:from-red-500/90 dark:to-red-600/90 active:dark:to-red-500",
         disabled &&
             "pointer-events-none bg-neutral-100 text-black/50 shadow-neutral-500/10 transition-colors dark:bg-neutral-800 dark:text-white/50",
         plain &&
