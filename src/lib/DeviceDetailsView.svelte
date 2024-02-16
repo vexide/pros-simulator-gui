@@ -51,6 +51,7 @@
                     }}>Port {$device.port + 1}</Button
                 >
             {/if}
+            <!-- Controllers are routed to either the Master slot or Partner slot. Users are only supposed to have one Master controller and one Partner controller selected at once. -->
             {#if $device instanceof ControllerDevice}
                 <select
                     bind:value={selectedControllerType}
@@ -67,7 +68,9 @@
             {/if}
         </div>
 
+        <!-- This section is for the primary "controls" area of the device where users can configure their virtual devices. The controller device is a bit of an exception because it has real hardware, so this section just monitors its inputs so the user can verify they're correct. -->
         {#if changingPort}
+            <!-- In this case we already have a device selected but the user wants to change its port so we show that instead of the device's default control panel. -->
             <DeviceGrid
                 onChoose={(port) => {
                     if ($device instanceof SmartDevice) {
@@ -77,6 +80,7 @@
                 }}
             />
         {:else if $device instanceof MotorDevice}
+            <!-- Motors can be reversed to invert their perceived rotation. This doesn't actually affect anything related to the server but on any graphics of the motor in the GUI it should invert the direction it's spinning. -->
             <Button
                 on:click={() => {
                     if ($device instanceof MotorDevice) {
@@ -91,6 +95,7 @@
             {/if}
         {/if}
     {:else}
+        <!-- Device setup flow. Users start by choosing a device, then choosing its port. In the case of controllers, which aren't smart devices, users instead choose a real life Bluetooth/Wired controller. -->
         <div>
             <h2 class="mb-2 font-bold">
                 {#if chosenSpec === DeviceSpec.Controller}
@@ -103,6 +108,7 @@
             </h2>
 
             {#if chosenSpec === DeviceSpec.Controller && registeredControllerIds.length <= 2}
+                <!-- Users pick a controller or are instructed to plug one in. This excludes controllers that are already used so that a controller isn't accidentally used as both Master and Partner. -->
                 <ul class="flex w-full flex-wrap justify-center gap-4">
                     {#each $filteredControllers.filter((controller) => !registeredControllerIds.includes(controller.id)) as controller}
                         <li class="max-w-xs flex-1">
@@ -134,10 +140,11 @@
                     {/each}
                 </ul>
             {:else if chosenSpec !== null}
+                <!-- Users already have chosen their device's type (spec), and now must pick a port for their new device -->
                 <DeviceGrid
-                    onChoose={() => {
+                    onChoose={(port) => {
                         if (chosenSpec !== null) {
-                            device.set(SmartDevice.create(chosenSpec, 0));
+                            device.set(SmartDevice.create(chosenSpec, port));
                         }
                     }}
                 />

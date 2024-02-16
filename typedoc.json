@@ -1,0 +1,12 @@
+{
+    "entryPoints": [
+        "src"
+    ],
+    "out": "docs",
+    "entryPointStrategy": "expand",
+    "plugin": [
+        "typedoc-theme-hierarchy"
+    ],
+    "theme": "hierarchy",
+    "name": "PROS Simulator GUI"
+}

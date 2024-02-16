@@ -47,6 +47,7 @@
 <Card title="Devices" class="flex-1">
     <div slot="actions" class="flex items-center gap-4">
         {#if $controllers.filter((c) => c === null).length > nullControllers}
+            <!-- This warning shows up when a controller is unplugged and is dismissed by clicking on it. -->
             <button
                 type="button"
                 class="flex cursor-pointer items-center gap-2 text-sm text-orange-500 underline"

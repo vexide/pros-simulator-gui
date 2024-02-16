@@ -1,3 +1,12 @@
+<!--
+@component
+Picker for all possible smart device ports.
+
+```tsx
+<DeviceGrid onChoose={(port) => console.log(port)} />
+```
+-->
+
 <script lang="ts">
     import { SmartDevice, ports } from "../smart-devices";
     import Button from "./Button.svelte";

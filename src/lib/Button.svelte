@@ -1,3 +1,23 @@
+<!--
+@component
+Pre-styled general-use HTML button for light and dark mode.
+
+Customize style:
+```tsx
+<Button large destructive>Death awaits</Button>
+<Button plain disabled>Click me</Button>
+```
+
+Large adds padding, for big modal buttons. Destructive and primary change the color. Plain removes the background, for buttons in headers and toolbars and stuff. Title adds a hover message, good for icon-only buttons. Disabled makes the button un-clickable.
+
+You can add an icon:
+```tsx
+<Button icon={GearSolid} iconColor="#fff">
+    Settings
+</Button>
+```
+-->
+
 <script context="module" lang="ts">
     export type ButtonContext =
         | {
